@@ -52,7 +52,7 @@
 //
 //////////////
 
-void rootAna_multivar(TString ihcalType = "SS310_OUTPUT")
+void rootAna_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
 {
 
   //// Suppress error messages from bad files
