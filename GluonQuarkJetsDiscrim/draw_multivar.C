@@ -50,7 +50,7 @@
 //
 //////////////
 
-void draw_multivar(TString ihcalType = "SS310_OUTPUT")
+void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
 {
 
   gStyle->SetPalette(51);
@@ -91,6 +91,7 @@ void draw_multivar(TString ihcalType = "SS310_OUTPUT")
   TLegend* leg = new TLegend(0.71, 0.54, 0.89, 0.74);
   TLegend* leg2 = new TLegend(0.71, 0.64, 0.89, 0.74);
   TLegend* leg3 = new TLegend(0.21, 0.74, 0.49, 0.84);
+  TLegend* leg4 = new TLegend(0.21, 0.24, 0.49, 0.44);
   TLatex* latex = new TLatex();
   latex->SetNDC();
   latex->SetTextAlign(32);
@@ -104,7 +105,6 @@ void draw_multivar(TString ihcalType = "SS310_OUTPUT")
   h2d_prim_trk->GetXaxis()->CenterTitle(1);
   h2d_prim_trk->GetYaxis()->CenterTitle(1);
   h2d_prim_trk->Draw("colz");
-  //h2d_prim_trk->Draw("");
   c_cor_prim_trk->Update(); // mandatory to find palette!!
   pal = (TPaletteAxis*)h2d_prim_trk->GetListOfFunctions()->FindObject("palette");
   pal->SetX2NDC(0.92);
@@ -125,7 +125,7 @@ void draw_multivar(TString ihcalType = "SS310_OUTPUT")
   c_cor_prim_twr->SaveAs(Form("outMultivar/%s_cor_prim_twr.pdf",ihcalType.Data()));
   
   ////////////////////////////////////////////////////////
-  //// 1) # of constituents
+  //// 1) multiplicity
   ////////////////////////////////////////////////////////
   double max = 0;
 
@@ -387,16 +387,24 @@ void draw_multivar(TString ihcalType = "SS310_OUTPUT")
   double quark_sum =0;
   double gluon_sum =0;
   double quark_purity = 0;
-  int xbin=0;
-  int ybin=0;
-  int xybin=0;
-  std::vector<double> px = 0; 
-  std::vector<double> py = 0; 
+  //int xbin=0; int ybin=0;
+  double lowEdge = 0;
+  double binSize = 0;
+  double highEdge = 0;
+   
+  ////////////////////////////////////////////////////////
+  //// 3-1) multiplicity
+  ////////////////////////////////////////////////////////
+  std::vector<double> p_nconstit_px = 0; 
+  std::vector<double> p_nconstit_py = 0; 
   
   TCanvas* c_p_nconstit_frac = new TCanvas("c_p_nconstit_frac","c_p_nconstit_frac",500,500);
   TH1D* h_p_nconstit_frac_quark = (TH1D*) hjet_p_nconstit_quark->Clone();
   TH1D* h_p_nconstit_frac_gluon = (TH1D*) hjet_p_nconstit_gluon->Clone();
   TH1D* h_p_nconstit_purity_quark = (TH1D*) hjet_p_nconstit_quark->Clone();
+  lowEdge = h_p_nconstit_frac_quark->GetBinLowEdge(1);
+  binSize = h_p_nconstit_frac_quark->GetSize()-2;
+  highEdge = h_p_nconstit_frac_quark->GetBinLowEdge(binSize+1);
   quark_tot = h_p_nconstit_frac_quark->Integral();
   gluon_tot = h_p_nconstit_frac_gluon->Integral();
   quark_sum = 0;
@@ -404,26 +412,16 @@ void draw_multivar(TString ihcalType = "SS310_OUTPUT")
   for (int ib =0; ib < h_p_nconstit_frac_quark->GetSize()-2; ib++){
     quark_sum += h_p_nconstit_frac_quark->GetBinContent(ib+1)/quark_tot;
     gluon_sum += h_p_nconstit_frac_gluon->GetBinContent(ib+1)/gluon_tot;
-    px.push_back(quark_sum);
-    py.push_back(1-gluon_sum);
-    if (quark_sum+gluon_sum==0) {
-      quark_purity=0;
-    }
+    p_nconstit_px.push_back(quark_sum); // efficiency
+    p_nconstit_py.push_back(1-gluon_sum); // rejection
+    if (quark_sum+gluon_sum==0) { quark_purity=0;}
     else { quark_purity = quark_sum/(quark_sum+gluon_sum);}
-    //cout << "px: " << px.at(ib) << endl;
-    //cout << "py: " << py.at(ib) << endl;
-    //cout << "quark_sum: " << quark_sum<<endl;
-    //cout << "gluon_sum: " << gluon_sum<<endl;
-    //cout << "quark_purity: " << quark_purity<<endl;
-    //// quark jet efficiency
-    h_p_nconstit_frac_quark->SetBinContent(ib+1,quark_sum); 
-    //// gluon jet rejection
-    h_p_nconstit_frac_gluon->SetBinContent(ib+1,1-gluon_sum); 
-    // quark jet purity
+    //cout << "p_nconstit_px: " << p_nconstit_px.at(ib) << ", p_nconstit_py: " << p_nconstit_py.at(ib) << endl;
+    h_p_nconstit_frac_quark->SetBinContent(ib+1,quark_sum); // efficiency
+    h_p_nconstit_frac_gluon->SetBinContent(ib+1,1-gluon_sum); // rejection
     h_p_nconstit_purity_quark->SetBinContent(ib+1,quark_purity); 
   } 
-  //cout << "Check px size:" << px.size() << endl;
-  //cout << "Check py size:" << py.size() << endl;
+  //cout << "Check size:" << p_nconstit_px.size() << p_nconstit_py.size() << endl;
   
   h_p_nconstit_frac_quark->GetXaxis()->SetTitle("# of primary particles in a jet");
   h_p_nconstit_frac_quark->SetMaximum(1.4);
@@ -436,34 +434,280 @@ void draw_multivar(TString ihcalType = "SS310_OUTPUT")
   h_p_nconstit_frac_quark->Draw("hist");
   h_p_nconstit_frac_gluon->Draw("hist same");
   //h_p_nconstit_purity_quark->Draw("hist same");
-  //heff_p_gluon->Draw("hist same");
   leg3->Draw();
   latex->DrawLatex(0.91,0.87,ihcalType.Data());
   latex->DrawLatex(0.91,0.80,"Primary jet");
-  dashedLine(-0.5,1,40.1,1);
+  dashedLine(lowEdge,1,highEdge,1);
   c_p_nconstit_frac->SaveAs(Form("outMultivar/%s_p_nconstit_frac.pdf",ihcalType.Data()));
+ 
+  ////////////////////////////////////////////////////////
+  std::vector<double> trk_nconstit_px = 0; 
+  std::vector<double> trk_nconstit_py = 0; 
   
-  ////ROC like plot
+  TCanvas* c_trk_nconstit_frac = new TCanvas("c_trk_nconstit_frac","c_trk_nconstit_frac",500,500);
+  TH1D* h_trk_nconstit_frac_quark = (TH1D*) hjet_trk_nconstit_quark->Clone();
+  TH1D* h_trk_nconstit_frac_gluon = (TH1D*) hjet_trk_nconstit_gluon->Clone();
+  TH1D* h_trk_nconstit_purity_quark = (TH1D*) hjet_trk_nconstit_quark->Clone();
+  lowEdge = h_trk_nconstit_frac_quark->GetBinLowEdge(1);
+  binSize = h_trk_nconstit_frac_quark->GetSize()-2;
+  highEdge = h_trk_nconstit_frac_quark->GetBinLowEdge(binSize+1);
+  quark_tot = h_trk_nconstit_frac_quark->Integral();
+  gluon_tot = h_trk_nconstit_frac_gluon->Integral();
+  quark_sum = 0;
+  gluon_sum = 0;
+  for (int ib =0; ib < h_trk_nconstit_frac_quark->GetSize()-2; ib++){
+    quark_sum += h_trk_nconstit_frac_quark->GetBinContent(ib+1)/quark_tot;
+    gluon_sum += h_trk_nconstit_frac_gluon->GetBinContent(ib+1)/gluon_tot;
+    trk_nconstit_px.push_back(quark_sum); // efficiency
+    trk_nconstit_py.push_back(1-gluon_sum); // rejection
+    if (quark_sum+gluon_sum==0) { quark_purity=0;}
+    else { quark_purity = quark_sum/(quark_sum+gluon_sum);}
+    h_trk_nconstit_frac_quark->SetBinContent(ib+1,quark_sum); // efficiency
+    h_trk_nconstit_frac_gluon->SetBinContent(ib+1,1-gluon_sum); // rejection
+    h_trk_nconstit_purity_quark->SetBinContent(ib+1,quark_purity); 
+  } 
+  
+  h_trk_nconstit_frac_quark->GetXaxis()->SetTitle("# of tracks in a jet");
+  h_trk_nconstit_frac_quark->SetMaximum(1.4);
+  h_trk_nconstit_frac_quark->SetFillStyle(0);
+  h_trk_nconstit_frac_quark->SetLineStyle(7);
+  h_trk_nconstit_frac_gluon->SetFillStyle(0);
+  h_trk_nconstit_frac_gluon->SetLineStyle(7);
+  h_trk_nconstit_purity_quark->SetLineColor(kGray+3);
+  h_trk_nconstit_purity_quark->SetFillStyle(0);
+  h_trk_nconstit_frac_quark->Draw("hist");
+  h_trk_nconstit_frac_gluon->Draw("hist same");
+  leg3->Draw();
+  latex->DrawLatex(0.91,0.87,ihcalType.Data());
+  latex->DrawLatex(0.91,0.80,"Primary jet");
+  dashedLine(lowEdge,1,highEdge,1);
+  c_trk_nconstit_frac->SaveAs(Form("outMultivar/%s_trk_nconstit_frac.pdf",ihcalType.Data()));
+ 
+  ////////////////////////////////////////////////////////
+  std::vector<double> twr_nconstit_px = 0; 
+  std::vector<double> twr_nconstit_py = 0; 
+  
+  TCanvas* c_twr_nconstit_frac = new TCanvas("c_twr_nconstit_frac","c_twr_nconstit_frac",500,500);
+  TH1D* h_twr_nconstit_frac_quark = (TH1D*) hjet_twr_nconstit_quark->Clone();
+  TH1D* h_twr_nconstit_frac_gluon = (TH1D*) hjet_twr_nconstit_gluon->Clone();
+  TH1D* h_twr_nconstit_purity_quark = (TH1D*) hjet_twr_nconstit_quark->Clone();
+  lowEdge = h_twr_nconstit_frac_quark->GetBinLowEdge(1);
+  binSize = h_twr_nconstit_frac_quark->GetSize()-2;
+  highEdge = h_twr_nconstit_frac_quark->GetBinLowEdge(binSize+1);
+  quark_tot = h_twr_nconstit_frac_quark->Integral();
+  gluon_tot = h_twr_nconstit_frac_gluon->Integral();
+  quark_sum = 0;
+  gluon_sum = 0;
+  for (int ib =0; ib < h_twr_nconstit_frac_quark->GetSize()-2; ib++){
+    quark_sum += h_twr_nconstit_frac_quark->GetBinContent(ib+1)/quark_tot;
+    gluon_sum += h_twr_nconstit_frac_gluon->GetBinContent(ib+1)/gluon_tot;
+    twr_nconstit_px.push_back(quark_sum); // efficiency
+    twr_nconstit_py.push_back(1-gluon_sum); // rejection
+    if (quark_sum+gluon_sum==0) { quark_purity=0;}
+    else { quark_purity = quark_sum/(quark_sum+gluon_sum);}
+    h_twr_nconstit_frac_quark->SetBinContent(ib+1,quark_sum); // efficiency
+    h_twr_nconstit_frac_gluon->SetBinContent(ib+1,1-gluon_sum); // rejection
+    h_twr_nconstit_purity_quark->SetBinContent(ib+1,quark_purity); 
+  } 
+  
+  h_twr_nconstit_frac_quark->GetXaxis()->SetTitle("# of towers in a jet");
+  h_twr_nconstit_frac_quark->SetMaximum(1.4);
+  h_twr_nconstit_frac_quark->SetFillStyle(0);
+  h_twr_nconstit_frac_quark->SetLineStyle(7);
+  h_twr_nconstit_frac_gluon->SetFillStyle(0);
+  h_twr_nconstit_frac_gluon->SetLineStyle(7);
+  h_twr_nconstit_purity_quark->SetLineColor(kGray+3);
+  h_twr_nconstit_purity_quark->SetFillStyle(0);
+  h_twr_nconstit_frac_quark->Draw("hist");
+  h_twr_nconstit_frac_gluon->Draw("hist same");
+  //h_twr_nconstit_purity_quark->Draw("hist same");
+  leg3->Draw();
+  latex->DrawLatex(0.91,0.87,ihcalType.Data());
+  latex->DrawLatex(0.91,0.80,"Primary jet");
+  dashedLine(lowEdge,1,highEdge,1);
+  c_twr_nconstit_frac->SaveAs(Form("outMultivar/%s_twr_nconstit_frac.pdf",ihcalType.Data()));
+ 
+  ////////////////////////////////////////////////////////
+  //// 3-2) pTD
+  ////////////////////////////////////////////////////////
+  std::vector<double> p_pTD_px = 0; 
+  std::vector<double> p_pTD_py = 0; 
+  
+  TCanvas* c_p_pTD_frac = new TCanvas("c_p_pTD_frac","c_p_pTD_frac",500,500);
+  TH1D* h_p_pTD_frac_quark = (TH1D*) hjet_p_pTD_quark->Clone();
+  TH1D* h_p_pTD_frac_gluon = (TH1D*) hjet_p_pTD_gluon->Clone();
+  TH1D* h_p_pTD_purity_quark = (TH1D*) hjet_p_pTD_quark->Clone();
+  lowEdge = h_p_pTD_frac_quark->GetBinLowEdge(1);
+  binSize = h_p_pTD_frac_quark->GetSize()-2;
+  highEdge = h_p_pTD_frac_quark->GetBinLowEdge(binSize+1);
+  quark_tot = h_p_pTD_frac_quark->Integral();
+  gluon_tot = h_p_pTD_frac_gluon->Integral();
+  quark_sum = 0;
+  gluon_sum = 0;
+  for (int ib =0; ib < h_p_pTD_frac_quark->GetSize()-2; ib++){
+    quark_sum += h_p_pTD_frac_quark->GetBinContent(ib+1)/quark_tot;
+    gluon_sum += h_p_pTD_frac_gluon->GetBinContent(ib+1)/gluon_tot;
+    p_pTD_px.push_back(quark_sum); // efficiency
+    p_pTD_py.push_back(1-gluon_sum); // rejection
+    if (quark_sum+gluon_sum==0) { quark_purity=0;}
+    else { quark_purity = quark_sum/(quark_sum+gluon_sum);}
+    //cout << "p_pTD_px: " << p_pTD_px.at(ib) << ", p_pTD_py: " << p_pTD_py.at(ib) << endl;
+    h_p_pTD_frac_quark->SetBinContent(ib+1,quark_sum); // efficiency
+    h_p_pTD_frac_gluon->SetBinContent(ib+1,1-gluon_sum); // rejection
+    h_p_pTD_purity_quark->SetBinContent(ib+1,quark_purity); 
+  } 
+  //cout << "Check size:" << p_pTD_px.size() << p_pTD_py.size() << endl;
+  
+  h_p_pTD_frac_quark->GetXaxis()->SetTitle("p_{T}D");
+  h_p_pTD_frac_quark->SetMaximum(1.4);
+  h_p_pTD_frac_quark->SetFillStyle(0);
+  h_p_pTD_frac_quark->SetLineStyle(7);
+  h_p_pTD_frac_gluon->SetFillStyle(0);
+  h_p_pTD_frac_gluon->SetLineStyle(7);
+  h_p_pTD_purity_quark->SetLineColor(kGray+3);
+  h_p_pTD_purity_quark->SetFillStyle(0);
+  h_p_pTD_frac_quark->Draw("hist");
+  h_p_pTD_frac_gluon->Draw("hist same");
+  //h_p_pTD_purity_quark->Draw("hist same");
+  leg3->Draw();
+  latex->DrawLatex(0.91,0.87,ihcalType.Data());
+  latex->DrawLatex(0.91,0.80,"Primary jet");
+  dashedLine(lowEdge,1,highEdge,1);
+  c_p_pTD_frac->SaveAs(Form("outMultivar/%s_p_pTD_frac.pdf",ihcalType.Data()));
+ 
+  ////////////////////////////////////////////////////////
+  std::vector<double> trk_pTD_px = 0; 
+  std::vector<double> trk_pTD_py = 0; 
+  
+  TCanvas* c_trk_pTD_frac = new TCanvas("c_trk_pTD_frac","c_trk_pTD_frac",500,500);
+  TH1D* h_trk_pTD_frac_quark = (TH1D*) hjet_trk_pTD_quark->Clone();
+  TH1D* h_trk_pTD_frac_gluon = (TH1D*) hjet_trk_pTD_gluon->Clone();
+  TH1D* h_trk_pTD_purity_quark = (TH1D*) hjet_trk_pTD_quark->Clone();
+  lowEdge = h_trk_pTD_frac_quark->GetBinLowEdge(1);
+  binSize = h_trk_pTD_frac_quark->GetSize()-2;
+  highEdge = h_trk_pTD_frac_quark->GetBinLowEdge(binSize+1);
+  quark_tot = h_trk_pTD_frac_quark->Integral();
+  gluon_tot = h_trk_pTD_frac_gluon->Integral();
+  quark_sum = 0;
+  gluon_sum = 0;
+  for (int ib =0; ib < h_trk_pTD_frac_quark->GetSize()-2; ib++){
+    quark_sum += h_trk_pTD_frac_quark->GetBinContent(ib+1)/quark_tot;
+    gluon_sum += h_trk_pTD_frac_gluon->GetBinContent(ib+1)/gluon_tot;
+    trk_pTD_px.push_back(quark_sum); // efficiency
+    trk_pTD_py.push_back(1-gluon_sum); // rejection
+    if (quark_sum+gluon_sum==0) { quark_purity=0;}
+    else { quark_purity = quark_sum/(quark_sum+gluon_sum);}
+    h_trk_pTD_frac_quark->SetBinContent(ib+1,quark_sum); // efficiency
+    h_trk_pTD_frac_gluon->SetBinContent(ib+1,1-gluon_sum); // rejection
+    h_trk_pTD_purity_quark->SetBinContent(ib+1,quark_purity); 
+  } 
+  
+  h_trk_pTD_frac_quark->GetXaxis()->SetTitle("p_{T}D");
+  h_trk_pTD_frac_quark->SetMaximum(1.4);
+  h_trk_pTD_frac_quark->SetFillStyle(0);
+  h_trk_pTD_frac_quark->SetLineStyle(7);
+  h_trk_pTD_frac_gluon->SetFillStyle(0);
+  h_trk_pTD_frac_gluon->SetLineStyle(7);
+  h_trk_pTD_purity_quark->SetLineColor(kGray+3);
+  h_trk_pTD_purity_quark->SetFillStyle(0);
+  h_trk_pTD_frac_quark->Draw("hist");
+  h_trk_pTD_frac_gluon->Draw("hist same");
+  leg3->Draw();
+  latex->DrawLatex(0.91,0.87,ihcalType.Data());
+  latex->DrawLatex(0.91,0.80,"Primary jet");
+  dashedLine(lowEdge,1,highEdge,1);
+  c_trk_pTD_frac->SaveAs(Form("outMultivar/%s_trk_pTD_frac.pdf",ihcalType.Data()));
+ 
+  ////////////////////////////////////////////////////////
+  std::vector<double> twr_pTD_px = 0; 
+  std::vector<double> twr_pTD_py = 0; 
+  
+  TCanvas* c_twr_pTD_frac = new TCanvas("c_twr_pTD_frac","c_twr_pTD_frac",500,500);
+  TH1D* h_twr_pTD_frac_quark = (TH1D*) hjet_twr_pTD_quark->Clone();
+  TH1D* h_twr_pTD_frac_gluon = (TH1D*) hjet_twr_pTD_gluon->Clone();
+  TH1D* h_twr_pTD_purity_quark = (TH1D*) hjet_twr_pTD_quark->Clone();
+  lowEdge = h_twr_pTD_frac_quark->GetBinLowEdge(1);
+  binSize = h_twr_pTD_frac_quark->GetSize()-2;
+  highEdge = h_twr_pTD_frac_quark->GetBinLowEdge(binSize+1);
+  quark_tot = h_twr_pTD_frac_quark->Integral();
+  gluon_tot = h_twr_pTD_frac_gluon->Integral();
+  quark_sum = 0;
+  gluon_sum = 0;
+  for (int ib =0; ib < h_twr_pTD_frac_quark->GetSize()-2; ib++){
+    quark_sum += h_twr_pTD_frac_quark->GetBinContent(ib+1)/quark_tot;
+    gluon_sum += h_twr_pTD_frac_gluon->GetBinContent(ib+1)/gluon_tot;
+    twr_pTD_px.push_back(quark_sum); // efficiency
+    twr_pTD_py.push_back(1-gluon_sum); // rejection
+    if (quark_sum+gluon_sum==0) { quark_purity=0;}
+    else { quark_purity = quark_sum/(quark_sum+gluon_sum);}
+    h_twr_pTD_frac_quark->SetBinContent(ib+1,quark_sum); // efficiency
+    h_twr_pTD_frac_gluon->SetBinContent(ib+1,1-gluon_sum); // rejection
+    h_twr_pTD_purity_quark->SetBinContent(ib+1,quark_purity); 
+  } 
+  
+  h_twr_pTD_frac_quark->GetXaxis()->SetTitle("p_{T}D");
+  h_twr_pTD_frac_quark->SetMaximum(1.4);
+  h_twr_pTD_frac_quark->SetFillStyle(0);
+  h_twr_pTD_frac_quark->SetLineStyle(7);
+  h_twr_pTD_frac_gluon->SetFillStyle(0);
+  h_twr_pTD_frac_gluon->SetLineStyle(7);
+  h_twr_pTD_purity_quark->SetLineColor(kGray+3);
+  h_twr_pTD_purity_quark->SetFillStyle(0);
+  h_twr_pTD_frac_quark->Draw("hist");
+  h_twr_pTD_frac_gluon->Draw("hist same");
+  //h_twr_pTD_purity_quark->Draw("hist same");
+  leg3->Draw();
+  latex->DrawLatex(0.91,0.87,ihcalType.Data());
+  latex->DrawLatex(0.91,0.80,"Primary jet");
+  dashedLine(lowEdge,1,highEdge,1);
+  c_twr_pTD_frac->SaveAs(Form("outMultivar/%s_twr_pTD_frac.pdf",ihcalType.Data()));
+ 
+  
+  ////////////////////////////////////////////////////////
+  //// 4) ROC plots
+  ////////////////////////////////////////////////////////
+  //// 4-1) multiplicity
+  
   TCanvas* c_p_nconstit_roc = new TCanvas("c_p_nconstit_roc","c_p_nconstit_roc",500,500);
-  TGraph* g_p_nconstit_roc = new TGraph(41,&px[0],&py[0]);
+  TGraph* g_p_nconstit_roc = new TGraph((int)p_nconstit_px.size(),&p_nconstit_px[0],&p_nconstit_py[0]);
+  TGraph* g_trk_nconstit_roc = new TGraph((int)trk_nconstit_px.size(),&trk_nconstit_px[0],&trk_nconstit_py[0]);
+  TGraph* g_twr_nconstit_roc = new TGraph((int)twr_nconstit_px.size(),&twr_nconstit_px[0],&twr_nconstit_py[0]);
   g_p_nconstit_roc->SetName("g_p_nconstit_roc");
+  g_trk_nconstit_roc->SetName("g_trk_nconstit_roc");
+  g_twr_nconstit_roc->SetName("g_twr_nconstit_roc");
+  SetGraphStyle(g_p_nconstit_roc,1,10);
+  SetGraphStyle(g_trk_nconstit_roc,2,10);
+  SetGraphStyle(g_twr_nconstit_roc,3,10);
+  
   g_p_nconstit_roc->GetXaxis()->SetTitle("Light-quark jet efficiency");
   g_p_nconstit_roc->GetYaxis()->SetTitle("Gluon jet rejection");
   g_p_nconstit_roc->GetXaxis()->SetLimits(0,1);
-  SetGraphStyle(g_p_nconstit_roc,1,0);
   g_p_nconstit_roc->SetMinimum(0);
   g_p_nconstit_roc->SetMaximum(1);
   g_p_nconstit_roc->Draw("alp");
-
+  g_trk_nconstit_roc->Draw("lp");
+  g_twr_nconstit_roc->Draw("lp");
+  leg4->AddEntry(g_p_nconstit_roc,"primary jet","lp");
+  leg4->AddEntry(g_trk_nconstit_roc,"track jet","lp");
+  leg4->AddEntry(g_twr_nconstit_roc,"tower jet","lp");
+  leg4->Draw();
+  c_p_nconstit_roc->SaveAs(Form("outMultivar/%s_p_nconstit_roc.pdf",ihcalType.Data()));
+  
+  ////////////////////////////////////////////////////////
+  TFile* fout = new TFile(Form("outMultivar/%s_ROC.root",ihcalType.Data()),"RECREATE");
+  fout->cd();
+  g_p_nconstit_roc->Write();
+  g_trk_nconstit_roc->Write();
+  g_twr_nconstit_roc->Write();
+  fout->Close();
+   
+  
   //TH2D* h2d_p_nconstit_roc = new TH2D("h2d_p_nconstit_roc",";light-quark jet efficiency;gluon jet rejection",41,0,1,41,0,1);
   //for (int ib=0; ib<h_p_nconstit_frac_quark->GetSize()-2; ib++){
   //  xbin = h2d_p_nconstit_roc->GetXaxis()->FindBin(h_p_nconstit_frac_quark->GetBinContent(ib+1));
   //  ybin = h2d_p_nconstit_roc->GetYaxis()->FindBin(h_p_nconstit_frac_gluon->GetBinContent(ib+1));
   //  h2d_p_nconstit_roc->SetBinContent(xbin,ybin,1);
   //}
-//  h2d_p_nconstit_roc->SetMarkerColor(kRed);
-//  h2d_p_nconstit_roc->Draw();
-  c_p_nconstit_roc->SaveAs(Form("outMultivar/%s_p_nconstit_roc.pdf",ihcalType.Data()));
 
   return; 
 }
