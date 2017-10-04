@@ -89,9 +89,9 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
 
   ////////////////////////////////////////////////////////
   TLegend* leg = new TLegend(0.71, 0.54, 0.89, 0.74);
-  TLegend* leg2 = new TLegend(0.71, 0.64, 0.89, 0.74);
-  TLegend* leg3 = new TLegend(0.21, 0.74, 0.49, 0.84);
-  TLegend* leg4 = new TLegend(0.21, 0.24, 0.49, 0.44);
+  TLegend* leg2 = new TLegend(0.68, 0.64, 0.89, 0.74);
+  TLegend* leg3 = new TLegend(0.19, 0.71, 0.59, 0.81);
+  TLegend* leg4 = new TLegend(0.21, 0.24, 0.49, 0.54);
   TLatex* latex = new TLatex();
   latex->SetNDC();
   latex->SetTextAlign(32);
@@ -140,8 +140,8 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   leg->AddEntry(hjet_p_nconstit_else,"Else","l");
   leg2->AddEntry(hjet_p_nconstit_quark,"Light quark","l");
   leg2->AddEntry(hjet_p_nconstit_gluon,"Gluon","l");
-  leg3->AddEntry(hjet_p_nconstit_quark,"Light quark","l");
-  leg3->AddEntry(hjet_p_nconstit_gluon,"Gluon","l");
+  leg3->AddEntry(hjet_p_nconstit_quark,"Quark jet efficiency","l");
+  leg3->AddEntry(hjet_p_nconstit_gluon,"Gluon jet rejection","l");
   
   TCanvas* c_p_nconstit = new TCanvas("c_p_nconstit","c_p_nconstit",500,500);
   hjet_p_nconstit->GetXaxis()->SetTitle("# of primary particles in a jet");
@@ -416,7 +416,7 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
     p_nconstit_py.push_back(1-gluon_sum); // rejection
     if (quark_sum+gluon_sum==0) { quark_purity=0;}
     else { quark_purity = quark_sum/(quark_sum+gluon_sum);}
-    //cout << "p_nconstit_px: " << p_nconstit_px.at(ib) << ", p_nconstit_py: " << p_nconstit_py.at(ib) << endl;
+    //cout << ib <<"th p_nconstit_px: " << p_nconstit_px.at(ib) << ", p_nconstit_py: " << p_nconstit_py.at(ib) << endl;
     h_p_nconstit_frac_quark->SetBinContent(ib+1,quark_sum); // efficiency
     h_p_nconstit_frac_gluon->SetBinContent(ib+1,1-gluon_sum); // rejection
     h_p_nconstit_purity_quark->SetBinContent(ib+1,quark_purity); 
@@ -424,11 +424,11 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   //cout << "Check size:" << p_nconstit_px.size() << p_nconstit_py.size() << endl;
   
   h_p_nconstit_frac_quark->GetXaxis()->SetTitle("# of primary particles in a jet");
-  h_p_nconstit_frac_quark->SetMaximum(1.4);
+  h_p_nconstit_frac_quark->SetMaximum(1.5);
   h_p_nconstit_frac_quark->SetFillStyle(0);
-  h_p_nconstit_frac_quark->SetLineStyle(7);
+//  h_p_nconstit_frac_quark->SetLineStyle(7);
   h_p_nconstit_frac_gluon->SetFillStyle(0);
-  h_p_nconstit_frac_gluon->SetLineStyle(7);
+//  h_p_nconstit_frac_gluon->SetLineStyle(7);
   h_p_nconstit_purity_quark->SetLineColor(kGray+3);
   h_p_nconstit_purity_quark->SetFillStyle(0);
   h_p_nconstit_frac_quark->Draw("hist");
@@ -468,18 +468,18 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   } 
   
   h_trk_nconstit_frac_quark->GetXaxis()->SetTitle("# of tracks in a jet");
-  h_trk_nconstit_frac_quark->SetMaximum(1.4);
+  h_trk_nconstit_frac_quark->SetMaximum(1.5);
   h_trk_nconstit_frac_quark->SetFillStyle(0);
-  h_trk_nconstit_frac_quark->SetLineStyle(7);
+//  h_trk_nconstit_frac_quark->SetLineStyle(7);
   h_trk_nconstit_frac_gluon->SetFillStyle(0);
-  h_trk_nconstit_frac_gluon->SetLineStyle(7);
+//  h_trk_nconstit_frac_gluon->SetLineStyle(7);
   h_trk_nconstit_purity_quark->SetLineColor(kGray+3);
   h_trk_nconstit_purity_quark->SetFillStyle(0);
   h_trk_nconstit_frac_quark->Draw("hist");
   h_trk_nconstit_frac_gluon->Draw("hist same");
   leg3->Draw();
   latex->DrawLatex(0.91,0.87,ihcalType.Data());
-  latex->DrawLatex(0.91,0.80,"Primary jet");
+  latex->DrawLatex(0.91,0.80,"Track jet");
   dashedLine(lowEdge,1,highEdge,1);
   c_trk_nconstit_frac->SaveAs(Form("outMultivar/%s_trk_nconstit_frac.pdf",ihcalType.Data()));
  
@@ -511,11 +511,11 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   } 
   
   h_twr_nconstit_frac_quark->GetXaxis()->SetTitle("# of towers in a jet");
-  h_twr_nconstit_frac_quark->SetMaximum(1.4);
+  h_twr_nconstit_frac_quark->SetMaximum(1.5);
   h_twr_nconstit_frac_quark->SetFillStyle(0);
-  h_twr_nconstit_frac_quark->SetLineStyle(7);
+//  h_twr_nconstit_frac_quark->SetLineStyle(7);
   h_twr_nconstit_frac_gluon->SetFillStyle(0);
-  h_twr_nconstit_frac_gluon->SetLineStyle(7);
+//  h_twr_nconstit_frac_gluon->SetLineStyle(7);
   h_twr_nconstit_purity_quark->SetLineColor(kGray+3);
   h_twr_nconstit_purity_quark->SetFillStyle(0);
   h_twr_nconstit_frac_quark->Draw("hist");
@@ -523,7 +523,7 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   //h_twr_nconstit_purity_quark->Draw("hist same");
   leg3->Draw();
   latex->DrawLatex(0.91,0.87,ihcalType.Data());
-  latex->DrawLatex(0.91,0.80,"Primary jet");
+  latex->DrawLatex(0.91,0.80,"Tower jet");
   dashedLine(lowEdge,1,highEdge,1);
   c_twr_nconstit_frac->SaveAs(Form("outMultivar/%s_twr_nconstit_frac.pdf",ihcalType.Data()));
  
@@ -559,11 +559,11 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   //cout << "Check size:" << p_pTD_px.size() << p_pTD_py.size() << endl;
   
   h_p_pTD_frac_quark->GetXaxis()->SetTitle("p_{T}D");
-  h_p_pTD_frac_quark->SetMaximum(1.4);
+  h_p_pTD_frac_quark->SetMaximum(1.5);
   h_p_pTD_frac_quark->SetFillStyle(0);
-  h_p_pTD_frac_quark->SetLineStyle(7);
+//  h_p_pTD_frac_quark->SetLineStyle(7);
   h_p_pTD_frac_gluon->SetFillStyle(0);
-  h_p_pTD_frac_gluon->SetLineStyle(7);
+//  h_p_pTD_frac_gluon->SetLineStyle(7);
   h_p_pTD_purity_quark->SetLineColor(kGray+3);
   h_p_pTD_purity_quark->SetFillStyle(0);
   h_p_pTD_frac_quark->Draw("hist");
@@ -603,18 +603,18 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   } 
   
   h_trk_pTD_frac_quark->GetXaxis()->SetTitle("p_{T}D");
-  h_trk_pTD_frac_quark->SetMaximum(1.4);
+  h_trk_pTD_frac_quark->SetMaximum(1.5);
   h_trk_pTD_frac_quark->SetFillStyle(0);
-  h_trk_pTD_frac_quark->SetLineStyle(7);
+//  h_trk_pTD_frac_quark->SetLineStyle(7);
   h_trk_pTD_frac_gluon->SetFillStyle(0);
-  h_trk_pTD_frac_gluon->SetLineStyle(7);
+//  h_trk_pTD_frac_gluon->SetLineStyle(7);
   h_trk_pTD_purity_quark->SetLineColor(kGray+3);
   h_trk_pTD_purity_quark->SetFillStyle(0);
   h_trk_pTD_frac_quark->Draw("hist");
   h_trk_pTD_frac_gluon->Draw("hist same");
   leg3->Draw();
   latex->DrawLatex(0.91,0.87,ihcalType.Data());
-  latex->DrawLatex(0.91,0.80,"Primary jet");
+  latex->DrawLatex(0.91,0.80,"Track jet");
   dashedLine(lowEdge,1,highEdge,1);
   c_trk_pTD_frac->SaveAs(Form("outMultivar/%s_trk_pTD_frac.pdf",ihcalType.Data()));
  
@@ -646,11 +646,11 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   } 
   
   h_twr_pTD_frac_quark->GetXaxis()->SetTitle("p_{T}D");
-  h_twr_pTD_frac_quark->SetMaximum(1.4);
+  h_twr_pTD_frac_quark->SetMaximum(1.5);
   h_twr_pTD_frac_quark->SetFillStyle(0);
-  h_twr_pTD_frac_quark->SetLineStyle(7);
+//  h_twr_pTD_frac_quark->SetLineStyle(7);
   h_twr_pTD_frac_gluon->SetFillStyle(0);
-  h_twr_pTD_frac_gluon->SetLineStyle(7);
+//  h_twr_pTD_frac_gluon->SetLineStyle(7);
   h_twr_pTD_purity_quark->SetLineColor(kGray+3);
   h_twr_pTD_purity_quark->SetFillStyle(0);
   h_twr_pTD_frac_quark->Draw("hist");
@@ -658,7 +658,7 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   //h_twr_pTD_purity_quark->Draw("hist same");
   leg3->Draw();
   latex->DrawLatex(0.91,0.87,ihcalType.Data());
-  latex->DrawLatex(0.91,0.80,"Primary jet");
+  latex->DrawLatex(0.91,0.80,"Tower jet");
   dashedLine(lowEdge,1,highEdge,1);
   c_twr_pTD_frac->SaveAs(Form("outMultivar/%s_twr_pTD_frac.pdf",ihcalType.Data()));
  
@@ -679,7 +679,7 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   SetGraphStyle(g_trk_nconstit_roc,2,10);
   SetGraphStyle(g_twr_nconstit_roc,3,10);
   
-  g_p_nconstit_roc->GetXaxis()->SetTitle("Light-quark jet efficiency");
+  g_p_nconstit_roc->GetXaxis()->SetTitle("Quark jet efficiency");
   g_p_nconstit_roc->GetYaxis()->SetTitle("Gluon jet rejection");
   g_p_nconstit_roc->GetXaxis()->SetLimits(0,1);
   g_p_nconstit_roc->SetMinimum(0);
@@ -687,10 +687,13 @@ void draw_multivar(TString ihcalType = "SS310_RSCALE_OUTPUT")
   g_p_nconstit_roc->Draw("alp");
   g_trk_nconstit_roc->Draw("lp");
   g_twr_nconstit_roc->Draw("lp");
-  leg4->AddEntry(g_p_nconstit_roc,"primary jet","lp");
-  leg4->AddEntry(g_trk_nconstit_roc,"track jet","lp");
-  leg4->AddEntry(g_twr_nconstit_roc,"tower jet","lp");
+  //leg4->SetHeader(Form("Multiplicity (%s)",ihcalType.Data()));
+  leg4->SetHeader("Multiplicity");
+  leg4->AddEntry(g_p_nconstit_roc,"Primary jet","lp");
+  leg4->AddEntry(g_trk_nconstit_roc,"Track jet","lp");
+  leg4->AddEntry(g_twr_nconstit_roc,"Tower jet","lp");
   leg4->Draw();
+  dashedLine(0,1,1,0);
   c_p_nconstit_roc->SaveAs(Form("outMultivar/%s_p_nconstit_roc.pdf",ihcalType.Data()));
   
   ////////////////////////////////////////////////////////
