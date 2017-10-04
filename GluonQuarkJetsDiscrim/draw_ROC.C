@@ -76,14 +76,19 @@ void draw_ROC()
   TString fname;
   TFile* fin[iNum];
   TGraph* g_twr_nconstit_roc[iNum];
-  TCanvas* c_ROC = new TCanvas("c_ROC","c_ROC",500,500);
+  TGraph* g_twr_pTD_roc[iNum];
   TLegend* leg = new TLegend(0.21, 0.24, 0.64, 0.59);
-  leg->SetHeader("Multiplicity");
-   
+  TLegend* leg2 = new TLegend(0.21, 0.24, 0.64, 0.44);
+  
   for (int ih=0; ih<iNum; ih++){
     fname = Form("./outMultivar/%s_ROC.root",ihcalType[ih].Data());
     fin[ih] = new TFile(fname);
     //cout <<"fname : "<<fname<<endl;
+  }
+
+  //// 1) Multiplicity 
+  TCanvas* c_nconstit_ROC = new TCanvas("c_nconstit_ROC","c_nconstit_ROC",500,500);
+  for (int ih=0; ih<iNum; ih++){
     g_twr_nconstit_roc[ih] = (TGraph*)fin[ih]->Get("g_twr_nconstit_roc");
     g_twr_nconstit_roc[ih]->SetName(Form("g_twr_nconstit_roc_%d",ih)); 
     SetGraphStyle(g_twr_nconstit_roc[ih],ih+1,10);
@@ -99,10 +104,58 @@ void draw_ROC()
     if(ih==0) g_twr_nconstit_roc[ih]->Draw("alp");
     else g_twr_nconstit_roc[ih]->Draw("lp");
   }
+  leg->SetHeader("Multiplicity");
   leg->Draw();
   dashedLine(0,1,1,0);
-  c_ROC->SaveAs("outMultivar/COMP_nconstit_roc.pdf");
+  c_nconstit_ROC->SaveAs("outMultivar/COMP_nconstit_roc.pdf");
 
-  return;
+  //// 2) pTD
+  TCanvas* c_pTD_ROC = new TCanvas("c_pTD_ROC","c_pTD_ROC",500,500);
+  for (int ih=0; ih<iNum; ih++){
+    //fname = Form("./outMultivar/%s_ROC.root",ihcalType[ih].Data());
+    //fin[ih] = new TFile(fname);
+    //cout <<"fname : "<<fname<<endl;
+    g_twr_pTD_roc[ih] = (TGraph*)fin[ih]->Get("g_twr_pTD_roc");
+    g_twr_pTD_roc[ih]->SetName(Form("g_twr_pTD_roc_%d",ih)); 
+    SetGraphStyle(g_twr_pTD_roc[ih],ih+1,10);
+    //g_twr_pTD_roc[ih]->SetMarkerStyle(7);
+    g_twr_pTD_roc[ih]->SetMarkerSize(0.5);
+    g_twr_pTD_roc[ih]->SetLineWidth(2);
+    g_twr_pTD_roc[ih]->GetXaxis()->SetLimits(0,1);
+    g_twr_pTD_roc[ih]->SetMinimum(0);
+    g_twr_pTD_roc[ih]->SetMaximum(1);
+    g_twr_pTD_roc[ih]->GetXaxis()->SetTitle("Quark jet efficiency");
+    g_twr_pTD_roc[ih]->GetYaxis()->SetTitle("Gluon jet rejection");
+    //leg->AddEntry(g_twr_pTD_roc[ih],readableType[ih].Data(),"lp");
+    if(ih==0) g_twr_pTD_roc[ih]->Draw("alp");
+    else g_twr_pTD_roc[ih]->Draw("lp");
+  }
+  leg->SetHeader("p_{T}D");
+  leg->Draw();
+  dashedLine(0,1,1,0);
+  c_pTD_ROC->SaveAs("outMultivar/COMP_pTD_roc.pdf");
+
+  //// 3) Multiplicity vs. pTD
+  //int cType = 2; // choose config type (2: AL_NOIHCAL, for example)
+  TCanvas* c_comp[iNum];
+  for (int cType=0; cType<iNum; cType++){
+    c_comp[cType]= new TCanvas(Form("c_comp_%d",cType),"c_comp",500,500);
+    SetGraphStyle(g_twr_nconstit_roc[cType],6,0);
+    SetGraphStyle(g_twr_pTD_roc[cType],7,10);
+    g_twr_nconstit_roc[cType]->SetMarkerSize(0.5);
+    g_twr_nconstit_roc[cType]->SetLineWidth(2);
+    g_twr_pTD_roc[cType]->SetMarkerSize(0.5);
+    g_twr_pTD_roc[cType]->SetLineWidth(2);
+    g_twr_nconstit_roc[cType]->Draw("alp");
+    g_twr_pTD_roc[cType]->Draw("lp");
+    leg2->SetHeader(readableType[cType].Data());
+    if (cType==0){
+      leg2->AddEntry(g_twr_nconstit_roc[cType],"Multiplicity","lp");
+      leg2->AddEntry(g_twr_pTD_roc[cType],"p_{T}D","lp");
+    }
+    leg2->Draw();
+    dashedLine(0,1,1,0);
+    c_comp[cType]->SaveAs(Form("outMultivar/COMP_%s_roc.pdf",ihcalType[cType].Data()));
+  }
   return; 
 }
