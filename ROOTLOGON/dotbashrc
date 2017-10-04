@@ -1,0 +1,36 @@
+# .bashrc
+
+## Source global definitions
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+## Set sphenix setup (not here in bash but in csh!)
+##source /opt/sphenix/core/bin/sphenix_setup.csh
+
+## Language
+#export LC_CTYPE="en_US.UTF-8"
+#export LC_CTYPE="C"
+#locale
+
+## User specific aliases and functions
+alias home='cd ~/'
+alias work='cd /phenix/u/kyolee/workSPHENIX'
+#alias spsetup='source /opt/sphenix/core/bin/sphenix_setup.csh'
+
+alias rm='rm -i'
+alias rmr='rm -r'
+alias rmf='rm -rf'
+
+alias ls='ls --color=auto'
+alias ll='ls -alh'
+alias llt='ls -altrh'
+
+alias rl='root -l'
+alias rlq='root -l -q'
+alias rlbq='root -l -b -q'
+
+alias psg='ps -ef | grep'
+alias fslq='fs listquota'
+alias reli='readlink -f'
+#alias reli='greadlink -f'

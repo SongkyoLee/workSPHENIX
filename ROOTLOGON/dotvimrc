@@ -1,0 +1,20 @@
+syntax on
+
+set smartindent
+set ruler
+set nu
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set expandtab
+
+set title
+set hlsearch
+
+autocmd BufReadPost *
+    \ if line("'\"") >= 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+
+color gruvbox
+set background=dark
