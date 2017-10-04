@@ -98,9 +98,9 @@ void SetLineHistStyle(TH1* h, Int_t c) {
 }
 
 void SetHistStyle(TH1* h, Int_t c, Int_t m) {
-  Int_t colorArr[] = { kGray+3, kRed+2, kBlue+1, kOrange+7, kGreen+3, kAzure+9, kViolet-1, kGreen+1,kBlack };
-  Int_t markerFullArr[] = {kFullCircle, kFullTriangleUp, kFullTriangleDown, kFullSquare, kFullStar, kFullDiamond};
-  Int_t markerOpenArr[] = {kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare, kOpenStar, kOpenDiamond};
+  Int_t colorArr[] = { kGray+3, kRed+1, kBlue+1, kGreen+2, kOrange+1, kViolet-4, kAzure+9, kPink+9, kBlack};
+  Int_t markerFullArr[] = {kFullCircle, kFullSquare, kFullDiamond, kFullCross, kFullStar};
+  Int_t markerOpenArr[] = {kOpenCircle, kOpenSquare, kOpenDiamond, kOpenCross, kOpenStar};
   h-> SetMarkerColor(colorArr[c]);
   if(m<10) h-> SetMarkerStyle(markerFullArr[m]);
   else h-> SetMarkerStyle(markerOpenArr[m-10]);
@@ -111,43 +111,16 @@ void SetHistStyle(TH1* h, Int_t c, Int_t m) {
   h-> GetYaxis()->CenterTitle();
 }
 
-void SetHistStyle2(TH1* h, Int_t c, Int_t m) {
-  Int_t colorArr[] = { kGray+3, kRed+2, kBlue+1, kOrange+7, kAzure+9, kViolet-4, kGreen+1, kPink+9, kBlack };
-  Int_t markerFullArr[] = {kFullCircle, kFullTriangleUp, kFullTriangleDown, kFullSquare, kFullStar, kFullDiamond};
-  //Int_t markerOpenArr[] = {kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare, kOpenStar, kOpenDiamond};
-  Int_t markerOpenArr[] = {kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare, kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare};
-
-  h-> SetMarkerColor(colorArr[c]);
-  if(m<10) h-> SetMarkerStyle(markerFullArr[m]);
-  else h-> SetMarkerStyle(markerOpenArr[m-10]);
-  h-> SetMarkerSize(1.2);
-  h-> SetLineColor(colorArr[c]);
-  h-> SetLineWidth(1);
-}
-
 void SetGraphStyle(TGraph* gr, Int_t c, Int_t m) {
-  Int_t colorArr[] = { kGray+3, kRed+2, kBlue+1, kOrange+7, kGreen+3, kAzure+9, kViolet-4, kGreen+1, kBlack };
-  Int_t markerFullArr[] = {kFullCircle, kFullTriangleUp, kFullTriangleDown, kFullSquare, kFullStar, kFullDiamond};
-  Int_t markerOpenArr[] = {kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare, kOpenStar, kOpenDiamond};
+  Int_t colorArr[] = { kGray+3, kRed+1, kBlue+1, kGreen+2, kOrange+1, kViolet-4, kAzure+9, kPink+9, kBlack};
+  Int_t markerFullArr[] = {kFullCircle, kFullSquare, kFullDiamond, kFullCross, kFullStar};
+  Int_t markerOpenArr[] = {kOpenCircle, kOpenSquare, kOpenDiamond, kOpenCross, kOpenStar};
 
   gr-> SetMarkerColor(colorArr[c]);
   if(m<10) gr-> SetMarkerStyle(markerFullArr[m]);
   else gr-> SetMarkerStyle(markerOpenArr[m-10]);
-  gr-> SetMarkerSize(1.2);
-  gr-> SetLineColor(colorArr[c]);
-  gr-> SetLineWidth(1);
-}
-
-void SetGraphStyle2(TGraph* gr, Int_t c, Int_t m) {
-  Int_t colorArr[] = { kGray+3, kRed+2, kBlue+1, kOrange+7, kAzure+9, kViolet-4, kGreen+1, kPink+9, kBlack };
-  Int_t markerFullArr[] = {kFullCircle, kFullTriangleUp, kFullTriangleDown, kFullSquare, kFullStar, kFullDiamond};
-  //Int_t markerOpenArr[] = {kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare, kOpenStar, kOpenDiamond};
-  Int_t markerOpenArr[] = {kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare, kOpenCircle, kOpenTriangleUp, kOpenTriangleDown, kOpenSquare};
-
-  gr-> SetMarkerColor(colorArr[c]);
-  if(m<10) gr-> SetMarkerStyle(markerFullArr[m]);
-  else gr-> SetMarkerStyle(markerOpenArr[m-10]);
-  gr-> SetMarkerSize(1.2);
+  if (m==2 || m==12) gr-> SetMarkerSize(1.8);
+  else gr-> SetMarkerSize(1.2);
   gr-> SetLineColor(colorArr[c]);
   gr-> SetLineWidth(1);
 }
