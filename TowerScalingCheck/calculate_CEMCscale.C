@@ -33,11 +33,18 @@
 #include "TError.h"
 
 #include <vector>
+  
+#define cemcSF 1.25
+#define ihcalSF 1.49
+#define ohcalSF 1.49
 
-// MyTree_Al_NotScaled
-// MyTree_Al_Scaled_v3 
+///////////
+//nosc  1.00
+//1p1 1.10
+//1p25 1.25
+///////////
 
-void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int endfile =1)
+void calculate_CEMCscale(TString ihcalType = "100MeV_Al_NotScaled_v3",int initfile=0,int endfile =1000)
 {
 
   //// Suppress error messages from bad files
@@ -94,6 +101,8 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
   ////////////////////////////////////////////////////////
   TH2D* h2D_JES_emfrac = new TH2D("h2D_JES_emfrac",";Truth Jet EM fraction;JES (=E_{Tower Jet}/E_{Truth Jet})",100, 0., 1., 100, 0, 1.5);
   TH2D* h2D_JES_calfrac = new TH2D("h2D_JES_calfrac",";(E_{HCAL}-E_{EMCAL})/(E_{HCAL}+E_{EMCAL});JES (=E_{Tower Jet}/E_{Truth Jet})",100, -1., 1., 100, 0, 1.5);
+  TH2D* h2D_modi_JES_emfrac = new TH2D("h2D_modi_JES_emfrac",";Truth Jet EM fraction;JES (=E_{Tower Jet}/E_{Truth Jet})",100, 0., 1., 100, 0, 1.5);
+  TH2D* h2D_modi_JES_calfrac = new TH2D("h2D_modi_JES_calfrac",";(E_{HCAL}-E_{EMCAL})/(E_{HCAL}+E_{EMCAL});JES (=E_{Tower Jet}/E_{Truth Jet})",100, -1., 1., 100, 0, 1.5);
   ////////////////////////////////////////////////////////
 
   //// loop over files 
@@ -133,7 +142,6 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
     float truthjet4_cons_e[999], truthjet4_cons_p[999];
     float truthjet4_cons_pt[999], truthjet4_cons_eta[999], truthjet4_cons_phi[999];
     float truthjet4_cons_dR[999];
-//    float truthjet4_cons_pid[999]; // KYO: to be modified!!!!!
     int truthjet4_cons_pid[999];
     maintree->SetBranchAddress("truthjet4_cons_n",&truthjet4_cons_n); 
     maintree->SetBranchAddress("truthjet4_cons_e",&truthjet4_cons_e); 
@@ -220,6 +228,10 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
     ////////////////////////////////////////////////////////
     //// 2) Fill the basic tower jet info
     for (int itwr=0; itwr<friendtree->GetEntries(); itwr++){
+//      float tower_sum = 0;
+//      float tower_cemcsum = 0;
+//      float tower_ihcalsum = 0;
+//      float tower_ohcalsum = 0;
       friendtree->GetEntry(itwr);
 		  h1D_towerjet4_e->Fill(towerjet4_e);
 		  h1D_towerjet4_p->Fill(towerjet4_p);
@@ -234,6 +246,7 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
         h1D_towerjet4_cemc_eta->Fill(towerjet4_cemc_eta[icemc]);
         h1D_towerjet4_cemc_phi->Fill(towerjet4_cemc_phi[icemc]);
         h1D_towerjet4_cemc_dR->Fill(towerjet4_cemc_dR[icemc]);
+        //tower_cemcsum+=towerjet4_cemc_e[icemc]; 
 		  } 
 		  h1D_towerjet4_ihcal_n->Fill(towerjet4_ihcal_n);
       for (int iihcal =0; iihcal < towerjet4_ihcal_n; iihcal ++) {
@@ -243,6 +256,7 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
         h1D_towerjet4_ihcal_eta->Fill(towerjet4_ihcal_eta[iihcal]);
         h1D_towerjet4_ihcal_phi->Fill(towerjet4_ihcal_phi[iihcal]);
         h1D_towerjet4_ihcal_dR->Fill(towerjet4_ihcal_dR[iihcal]);
+        //tower_ihcalsum+=towerjet4_ihcal_e[iihcal]; 
 		  } 
 		  h1D_towerjet4_ohcal_n->Fill(towerjet4_ohcal_n);
       for (int iohcal =0; iohcal < towerjet4_ohcal_n; iohcal ++) {
@@ -252,7 +266,17 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
         h1D_towerjet4_ohcal_eta->Fill(towerjet4_ohcal_eta[iohcal]);
         h1D_towerjet4_ohcal_phi->Fill(towerjet4_ohcal_phi[iohcal]);
         h1D_towerjet4_ohcal_dR->Fill(towerjet4_ohcal_dR[iohcal]);
+        //tower_ohcalsum+=towerjet4_ohcal_e[iohcal]; 
 		  } 
+      //tower_sum = tower_cemcsum+tower_ihcalsum+tower_ohcalsum;
+      //cout << "towerjet_e = " << towerjet4_e << endl;
+      //cout << " * tower_cemcsum = " << tower_cemcsum << endl;
+      //cout << " * tower_ihcalsum = " << tower_ihcalsum << endl;
+      //cout << " * tower_ohcalsum = " << tower_ohcalsum << endl;
+      //cout << " * tower_sum = " << tower_sum << endl;
+      //cout << " * tower_cemcsum frac= " << tower_cemcsum/tower_sum << endl;
+      //cout << " * tower_ihcalsum frac= " << tower_ihcalsum/tower_sum << endl;
+      //cout << " * tower_ohcalsum frac= " << tower_ohcalsum/tower_sum << endl;
     }
     ////////////////////////////////////////////////////////
     //// 3) Fill need-more-calculation info 
@@ -268,6 +292,7 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
        
       //// matching tower jets (smallest dR) to get JES
       float jes_ratio = 999; //finally needed
+      float modi_jes_ratio = 999; //finally needed
       float match_dR = 999;
       float tmp_dR = 999;
       int match_idx = 999;
@@ -295,18 +320,33 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
       float cemc_sum = 0;
       float ihcal_sum = 0;
       float ohcal_sum = 0;
+      
+      float modi_jet_e = 0;
+      float modi_cal_frac = 999; //finally needed
+      float modi_cemc_sum = 0;
+      float modi_ihcal_sum = 0;
+      float modi_ohcal_sum = 0;
+
       for (int icemc =0; icemc < towerjet4_cemc_n; icemc ++) {
         cemc_sum += towerjet4_cemc_e[icemc]; 
+        modi_cemc_sum += towerjet4_cemc_e[icemc]*cemcSF; 
       } 
       for (int iihcal =0; iihcal < towerjet4_ihcal_n; iihcal ++) {
         ihcal_sum += towerjet4_ihcal_e[iihcal]; 
+        modi_ihcal_sum += towerjet4_ihcal_e[iihcal]*ihcalSF; 
       } 
       for (int iohcal =0; iohcal < towerjet4_ohcal_n; iohcal ++) {
         ohcal_sum += towerjet4_ohcal_e[iohcal]; 
+        modi_ohcal_sum += towerjet4_ohcal_e[iohcal]*ohcalSF; 
       } 
       cal_frac = (ihcal_sum+ohcal_sum-cemc_sum)/(ihcal_sum+ohcal_sum+cemc_sum);
+      modi_cal_frac = (modi_ihcal_sum+modi_ohcal_sum-modi_cemc_sum)/(modi_ihcal_sum+modi_ohcal_sum+modi_cemc_sum);
+      modi_jet_e = modi_cemc_sum + modi_ihcal_sum + modi_ohcal_sum; 
+      modi_jes_ratio = modi_jet_e/truthjet4_e;
+      //cout << "modi_jes_ratio = " << modi_jes_ratio << endl; 
       //cout << "cal_frac = " << cal_frac << endl;
-      
+      //cout << "modi_cal_frac = " << modi_cal_frac << endl;
+       
       //// loop over truth constituents to get em fraction 
       float em_frac = 999; //finally needed 
       float em_den = 0;
@@ -325,6 +365,9 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
       
       h2D_JES_calfrac->Fill(cal_frac,jes_ratio); 
       h2D_JES_emfrac->Fill(em_frac,jes_ratio); 
+      
+      h2D_modi_JES_calfrac->Fill(modi_cal_frac,modi_jes_ratio); 
+      h2D_modi_JES_emfrac->Fill(em_frac,modi_jes_ratio); 
     
     } // end of truth jet loop
   
@@ -334,7 +377,7 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_emfrac->Draw();
 
-  TFile* fout = new TFile(Form("out_emfrac/emfrac_%s.root",ihcalType.Data()),"RECREATE");
+  TFile* fout = new TFile(Form("out_CEMCscale/CEMCscale_%s_1p25.root",ihcalType.Data()),"RECREATE");
   fout->cd();
   h1D_truthjet4_e->Write();
   h1D_truthjet4_p->Write();
@@ -377,6 +420,8 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
   h1D_towerjet4_ohcal_dR->Write();
   h2D_JES_calfrac->Write();
   h2D_JES_emfrac->Write();
+  h2D_modi_JES_calfrac->Write();
+  h2D_modi_JES_emfrac->Write();
   fout->Close();
 
   return; 
