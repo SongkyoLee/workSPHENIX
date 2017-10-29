@@ -34,99 +34,67 @@
 
 #include <vector>
 
-void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int endfile =5,float cemc_cut=0.5, float ihcal_cut=0.)
+void rootAna_ohcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int endfile =5,bool do_emcal_scale=false, bool do_ihcal_scale=false, bool do_ohcal_scale=false, float cemc_e_cut=0.5, float ihcal_e_cut=1.0, float ohcal_e_cut)
 {
   bool do_E3x3 = true;
   bool do_E5x5 = true;
   bool do_clE = true;
-  
+ 
   float true_p;
   TString ihcalType;
   TString ptlType;
   
   float cemc_sf=1.;
   float ihcal_sf=1.;
-  float ohcal_sf=1./0.663;
+  float ohcal_sf=1.;
   
   if (inType.compare("SS310_PiPl_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "SS310";
     ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else if (inType.compare("SS310_PiMi_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "SS310";
     ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else if (inType.compare("Al_PiPl_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "Al";
     ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else if (inType.compare("Al_PiMi_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "Al";
     ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else if (inType.compare("SS310_PiPl_10GeV")==0){ 
     true_p  = 10;
     ihcalType = "SS310";
     ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else if (inType.compare("SS310_PiMi_10GeV")==0){ 
     true_p  = 10;
     ihcalType = "SS310";
     ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else if (inType.compare("Al_PiPl_10GeV")==0){ 
     true_p  = 10;
     ihcalType = "Al";
     ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else if (inType.compare("Al_PiMi_10GeV")==0){ 
     true_p  = 10;
     ihcalType = "Al";
     ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("SS310_PiPl_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "SS310";
-    ptlType = "#pi^{+}";
-    if (do_cemc_scale) cemc_sf=1.;
-    if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("SS310_PiMi_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "SS310";
-    ptlType = "#pi^{-}";
-    if (do_cemc_scale) cemc_sf=1.;
-    if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("Al_PiPl_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "Al";
-    ptlType = "#pi^{+}";
-    if (do_cemc_scale) cemc_sf=1.;
-    if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("Al_PiMi_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "Al";
-    ptlType = "#pi^{-}";
-    if (do_cemc_scale) cemc_sf=1.;
-    if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
+    ohcal_sf=1.;
   }
   else {
     cout<<"WARNING! select correct inType" <<endl; return;
@@ -404,7 +372,7 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
       
       ////////////// cut ///////////////
 
-      if (cemc_E3x3[itrk] < cemc_cut && ihcal_E3x3[itrk]< ihcal_cut){
+      if (cemc_E3x3[itrk] < cemc_e_cut && ihcal_E3x3[itrk]< ihcal_e_cut){
         if (do_E3x3){    
           cemc_e=cemc_E3x3[itrk]*cemc_sf;
           ihcal_e=ihcal_E3x3[itrk]*ihcal_sf;
@@ -553,7 +521,7 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_ohcal_scale->Draw();
 
-  TFile* fout = new TFile(Form("out_ohcal_scale/ihcal_scale_%s.root",inType.c_str()),"RECREATE");
+  TFile* fout = new TFile(Form("out_ohcal_scale/ohcal_scale_%s.root",inType.c_str()),"RECREATE");
   fout->cd();
   
   TDirectory* beforeCut = fout->mkdir("beforeCut");

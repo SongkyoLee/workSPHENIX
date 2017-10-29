@@ -34,67 +34,60 @@
 
 #include <vector>
 
-void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int endfile =5,float cemc_cut=0.5, float ihcal_cut=0.)
+void rootAna_scale(string inType = "SS310_PiPl_25GeV",
+                  int initfile=0,
+                  int endfile =1,
+                  bool do_cemc_scale=false, 
+                  bool do_ihcal_scale=false, 
+                  bool do_ohcal_scale=false, 
+                  float cemc_mip_cut=0.5, 
+                  float ihcal_mip_cut=0.3, 
+                  float ohcal_mip_cut = 5.0)
 {
   bool do_E3x3 = true;
   bool do_E5x5 = true;
   bool do_clE = true;
-  
+ 
   float true_p;
   TString ihcalType;
   TString ptlType;
   
   float cemc_sf=1.;
   float ihcal_sf=1.;
-  float ohcal_sf=1./0.663;
-  
+  float ohcal_sf=1.;
+ 
+  int nbin = 400; 
   if (inType.compare("SS310_PiPl_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "SS310";
     ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
+    if (do_cemc_scale) cemc_sf=1.;
+    if (do_ihcal_scale) ihcal_sf=1.;
+    if (do_ohcal_scale) ohcal_sf=1./0.662;
   }
   else if (inType.compare("SS310_PiMi_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "SS310";
     ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
+    if (do_cemc_scale) cemc_sf=1.;
+    if (do_ihcal_scale) ihcal_sf=1.;
+    if (do_ohcal_scale) ohcal_sf=1./0.662;
   }
   else if (inType.compare("Al_PiPl_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "Al";
     ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
+    if (do_cemc_scale) cemc_sf=1.;
+    if (do_ihcal_scale) ihcal_sf=1.;
+    if (do_ohcal_scale) ohcal_sf=1./0.662;
   }
   else if (inType.compare("Al_PiMi_25GeV")==0){ 
     true_p  = 25;
     ihcalType = "Al";
     ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("SS310_PiPl_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "SS310";
-    ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("SS310_PiMi_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "SS310";
-    ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("Al_PiPl_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "Al";
-    ptlType = "#pi^{+}";
-    ohcal_sf=1./0.663;
-  }
-  else if (inType.compare("Al_PiMi_10GeV")==0){ 
-    true_p  = 10;
-    ihcalType = "Al";
-    ptlType = "#pi^{-}";
-    ohcal_sf=1./0.663;
+    if (do_cemc_scale) cemc_sf=1.;
+    if (do_ihcal_scale) ihcal_sf=1.;
+    if (do_ohcal_scale) ohcal_sf=1./0.662;
   }
   else if (inType.compare("SS310_PiPl_10GeV")==0){ 
     true_p  = 10;
@@ -102,7 +95,7 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     ptlType = "#pi^{+}";
     if (do_cemc_scale) cemc_sf=1.;
     if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
+    if (do_ohcal_scale) ohcal_sf=1./0.604;
   }
   else if (inType.compare("SS310_PiMi_10GeV")==0){ 
     true_p  = 10;
@@ -110,7 +103,7 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     ptlType = "#pi^{-}";
     if (do_cemc_scale) cemc_sf=1.;
     if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
+    if (do_ohcal_scale) ohcal_sf=1./0.604;
   }
   else if (inType.compare("Al_PiPl_10GeV")==0){ 
     true_p  = 10;
@@ -118,7 +111,7 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     ptlType = "#pi^{+}";
     if (do_cemc_scale) cemc_sf=1.;
     if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
+    if (do_ohcal_scale) ohcal_sf=1./0.601;
   }
   else if (inType.compare("Al_PiMi_10GeV")==0){ 
     true_p  = 10;
@@ -126,7 +119,7 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     ptlType = "#pi^{-}";
     if (do_cemc_scale) cemc_sf=1.;
     if (do_ihcal_scale) ihcal_sf=1.;
-    if (do_ohcal_scale) ohcal_sf=1./0.663;
+    if (do_ohcal_scale) ohcal_sf=1./0.601;
   }
   else {
     cout<<"WARNING! select correct inType" <<endl; return;
@@ -158,121 +151,133 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   //TH1D* h1D_g4particle_pt = new TH1D("g4particle_pt",";g4particle_pt;",50,0,50);
   //TH1D* h1D_g4particle_eta = new TH1D("g4particle_eta",";g4particle_eta;",100,-1.5,1.5);
   ////////////////////////////////////////////////////////
-  TH1D* h1D_cemc_E3x3 = new TH1D("cemc_E3x3",";cemc_E3x3;",700,0,35);
-  TH1D* h1D_ihcal_E3x3 = new TH1D("ihcal_E3x3",";ihcal_E3x3;",700,0,35);
-  TH1D* h1D_ohcal_E3x3 = new TH1D("ohcal_E3x3",";ohcal_E3x3;",700,0,35);
-  TH1D* h1D_allThree_E3x3 = new TH1D("allThree_E3x3",";allThree_E3x3;",700,0,35);
-  TH1D* h1D_ohcal_incident_E3x3 = new TH1D("ohcal_incident_E3x3",";Truth E - cemc_E - ihcal_E;",700,0,35);
-  TH1D* h1D_ohcal_frac_E3x3 = new TH1D("ohcal_frac_E3x3",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",700,0,2.);
-  TH1D* h1D_outerTwo_incident_E3x3 = new TH1D("outerTwo_incident_E3x3",";Truth E - cemc_E;",700,0,35);
-  TH1D* h1D_outerTwo_frac_E3x3 = new TH1D("outerTwo_frac_E3x3",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",700,0,2.);
-  TH1D* h1D_allThree_frac_E3x3 = new TH1D("allThree_frac_E3x3",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",700,0,2.);
+  TH1D* h1D_cemc_E3x3 = new TH1D("cemc_E3x3",";cemc_E3x3;",400,0,true_p*1.4);
+  TH1D* h1D_ihcal_E3x3 = new TH1D("ihcal_E3x3",";ihcal_E3x3;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_E3x3 = new TH1D("ohcal_E3x3",";ohcal_E3x3;",400,0,true_p*1.4);
+  TH1D* h1D_allThree_E3x3 = new TH1D("allThree_E3x3",";allThree_E3x3;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_incident_E3x3 = new TH1D("ohcal_incident_E3x3",";Truth E - cemc_E - ihcal_E;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_frac_E3x3 = new TH1D("ohcal_frac_E3x3",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",400,0,2.);
+  TH1D* h1D_outerTwo_incident_E3x3 = new TH1D("outerTwo_incident_E3x3",";Truth E - cemc_E;",400,0,true_p*1.4);
+  TH1D* h1D_outerTwo_frac_E3x3 = new TH1D("outerTwo_frac_E3x3",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",400,0,2.);
+  TH1D* h1D_allThree_frac_E3x3 = new TH1D("allThree_frac_E3x3",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",400,0,2.);
   ////
-  TH1D* h1D_cemc_E5x5 = new TH1D("cemc_E5x5",";cemc_E5x5;",700,0,35);
-  TH1D* h1D_ihcal_E5x5 = new TH1D("ihcal_E5x5",";ihcal_E5x5;",700,0,35);
-  TH1D* h1D_ohcal_E5x5 = new TH1D("ohcal_E5x5",";ohcal_E5x5;",700,0,35);
-  TH1D* h1D_allThree_E5x5 = new TH1D("allThree_E5x5",";allThree_E5x5;",700,0,35);
-  TH1D* h1D_ohcal_incident_E5x5 = new TH1D("ohcal_incident_E5x5",";Truth E - cemc_E - ihcal_E;",700,0,35);
-  TH1D* h1D_ohcal_frac_E5x5 = new TH1D("ohcal_frac_E5x5",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",700,0,2.);
-  TH1D* h1D_outerTwo_incident_E5x5 = new TH1D("outerTwo_incident_E5x5",";Truth E - cemc_E;",700,0,35);
-  TH1D* h1D_outerTwo_frac_E5x5 = new TH1D("outerTwo_frac_E5x5",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",700,0,2.);
-  TH1D* h1D_allThree_frac_E5x5 = new TH1D("allThree_frac_E5x5",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",700,0,2.);
+  TH1D* h1D_cemc_E5x5 = new TH1D("cemc_E5x5",";cemc_E5x5;",400,0,true_p*1.4);
+  TH1D* h1D_ihcal_E5x5 = new TH1D("ihcal_E5x5",";ihcal_E5x5;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_E5x5 = new TH1D("ohcal_E5x5",";ohcal_E5x5;",400,0,true_p*1.4);
+  TH1D* h1D_allThree_E5x5 = new TH1D("allThree_E5x5",";allThree_E5x5;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_incident_E5x5 = new TH1D("ohcal_incident_E5x5",";Truth E - cemc_E - ihcal_E;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_frac_E5x5 = new TH1D("ohcal_frac_E5x5",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",400,0,2.);
+  TH1D* h1D_outerTwo_incident_E5x5 = new TH1D("outerTwo_incident_E5x5",";Truth E - cemc_E;",400,0,true_p*1.4);
+  TH1D* h1D_outerTwo_frac_E5x5 = new TH1D("outerTwo_frac_E5x5",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",400,0,2.);
+  TH1D* h1D_allThree_frac_E5x5 = new TH1D("allThree_frac_E5x5",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",400,0,2.);
   ////
-  TH1D* h1D_cemc_clE = new TH1D("cemc_clE",";cemc_clE;",700,0,35);
-  TH1D* h1D_ihcal_clE = new TH1D("ihcal_clE",";ihcal_clE;",700,0,35);
-  TH1D* h1D_ohcal_clE = new TH1D("ohcal_clE",";ohcal_clE;",700,0,35);
-  TH1D* h1D_allThree_clE = new TH1D("allThree_clE",";allThree_clE;",700,0,35);
-  TH1D* h1D_ohcal_incident_clE = new TH1D("ohcal_incident_clE",";Truth E - cemc_E - ihcal_E;",700,0,35);
-  TH1D* h1D_ohcal_frac_clE = new TH1D("ohcal_frac_clE",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",700,0,2.);
-  TH1D* h1D_outerTwo_incident_clE = new TH1D("outerTwo_incident_clE",";Truth E - cemc_E;",700,0,35);
-  TH1D* h1D_outerTwo_frac_clE = new TH1D("outerTwo_frac_clE",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",700,0,2.);
-  TH1D* h1D_allThree_frac_clE = new TH1D("allThree_frac_clE",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",700,0,2.);
+  TH1D* h1D_cemc_clE = new TH1D("cemc_clE",";cemc_clE;",400,0,true_p*1.4);
+  TH1D* h1D_ihcal_clE = new TH1D("ihcal_clE",";ihcal_clE;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_clE = new TH1D("ohcal_clE",";ohcal_clE;",400,0,true_p*1.4);
+  TH1D* h1D_allThree_clE = new TH1D("allThree_clE",";allThree_clE;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_incident_clE = new TH1D("ohcal_incident_clE",";Truth E - cemc_E - ihcal_E;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_frac_clE = new TH1D("ohcal_frac_clE",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",400,0,2.);
+  TH1D* h1D_outerTwo_incident_clE = new TH1D("outerTwo_incident_clE",";Truth E - cemc_E;",400,0,true_p*1.4);
+  TH1D* h1D_outerTwo_frac_clE = new TH1D("outerTwo_frac_clE",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",400,0,2.);
+  TH1D* h1D_allThree_frac_clE = new TH1D("allThree_frac_clE",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",400,0,2.);
   ////////
   //// cut
   ////////
-  TH1D* h1D_cemc_E3x3_cut = new TH1D("cemc_E3x3_cut",";cemc_E3x3;",700,0,35);
-  TH1D* h1D_ihcal_E3x3_cut = new TH1D("ihcal_E3x3_cut",";ihcal_E3x3;",700,0,35);
-  TH1D* h1D_ohcal_E3x3_cut = new TH1D("ohcal_E3x3_cut",";ohcal_E3x3;",700,0,35);
-  TH1D* h1D_allThree_E3x3_cut = new TH1D("allThree_E3x3_cut",";allThree_E3x3_cut;",700,0,35);
-  TH1D* h1D_ohcal_incident_E3x3_cut = new TH1D("ohcal_incident_E3x3_cut",";Truth E - cemc_E - ihcal_E;",700,0,35);
-  TH1D* h1D_ohcal_frac_E3x3_cut = new TH1D("ohcal_frac_E3x3_cut",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",700,0,2.);
-  TH1D* h1D_outerTwo_incident_E3x3_cut = new TH1D("outerTwo_incident_E3x3_cut",";Truth E - cemc_E;",700,0,35);
-  TH1D* h1D_outerTwo_frac_E3x3_cut = new TH1D("outerTwo_frac_E3x3_cut",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",700,0,2.);
-  TH1D* h1D_allThree_frac_E3x3_cut = new TH1D("allThree_frac_E3x3_cut",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",700,0,2.);
+  TH1D* h1D_cemc_E3x3_cut = new TH1D("cemc_E3x3_cut",";cemc_E3x3;",400,0,true_p*1.4);
+  TH1D* h1D_ihcal_E3x3_cut = new TH1D("ihcal_E3x3_cut",";ihcal_E3x3;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_E3x3_cut = new TH1D("ohcal_E3x3_cut",";ohcal_E3x3;",400,0,true_p*1.4);
+  TH1D* h1D_allThree_E3x3_cut = new TH1D("allThree_E3x3_cut",";allThree_E3x3_cut;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_incident_E3x3_cut = new TH1D("ohcal_incident_E3x3_cut",";Truth E - cemc_E - ihcal_E;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_frac_E3x3_cut = new TH1D("ohcal_frac_E3x3_cut",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",400,0,2.);
+  TH1D* h1D_outerTwo_incident_E3x3_cut = new TH1D("outerTwo_incident_E3x3_cut",";Truth E - cemc_E;",400,0,true_p*1.4);
+  TH1D* h1D_outerTwo_frac_E3x3_cut = new TH1D("outerTwo_frac_E3x3_cut",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",400,0,2.);
+  TH1D* h1D_allThree_frac_E3x3_cut = new TH1D("allThree_frac_E3x3_cut",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",400,0,2.);
   ////
-  TH1D* h1D_cemc_E5x5_cut = new TH1D("cemc_E5x5_cut",";cemc_E5x5;",700,0,35);
-  TH1D* h1D_ihcal_E5x5_cut = new TH1D("ihcal_E5x5_cut",";ihcal_E5x5;",700,0,35);
-  TH1D* h1D_ohcal_E5x5_cut = new TH1D("ohcal_E5x5_cut",";ohcal_E5x5;",700,0,35);
-  TH1D* h1D_allThree_E5x5_cut = new TH1D("allThree_E5x5_cut",";allThree_E5x5_cut;",700,0,35);
-  TH1D* h1D_ohcal_incident_E5x5_cut = new TH1D("ohcal_incident_E5x5_cut",";Truth E - cemc_E - ihcal_E;",700,0,35);
-  TH1D* h1D_ohcal_frac_E5x5_cut = new TH1D("ohcal_frac_E5x5_cut",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",700,0,2.);
-  TH1D* h1D_outerTwo_incident_E5x5_cut = new TH1D("outerTwo_incident_E5x5_cut",";Truth E - cemc_E;",700,0,35);
-  TH1D* h1D_outerTwo_frac_E5x5_cut = new TH1D("outerTwo_frac_E5x5_cut",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",700,0,2.);
-  TH1D* h1D_allThree_frac_E5x5_cut = new TH1D("allThree_frac_E5x5_cut",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",700,0,2.);
+  TH1D* h1D_cemc_E5x5_cut = new TH1D("cemc_E5x5_cut",";cemc_E5x5;",400,0,true_p*1.4);
+  TH1D* h1D_ihcal_E5x5_cut = new TH1D("ihcal_E5x5_cut",";ihcal_E5x5;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_E5x5_cut = new TH1D("ohcal_E5x5_cut",";ohcal_E5x5;",400,0,true_p*1.4);
+  TH1D* h1D_allThree_E5x5_cut = new TH1D("allThree_E5x5_cut",";allThree_E5x5_cut;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_incident_E5x5_cut = new TH1D("ohcal_incident_E5x5_cut",";Truth E - cemc_E - ihcal_E;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_frac_E5x5_cut = new TH1D("ohcal_frac_E5x5_cut",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",400,0,2.);
+  TH1D* h1D_outerTwo_incident_E5x5_cut = new TH1D("outerTwo_incident_E5x5_cut",";Truth E - cemc_E;",400,0,true_p*1.4);
+  TH1D* h1D_outerTwo_frac_E5x5_cut = new TH1D("outerTwo_frac_E5x5_cut",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",400,0,2.);
+  TH1D* h1D_allThree_frac_E5x5_cut = new TH1D("allThree_frac_E5x5_cut",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",400,0,2.);
   ////
-  TH1D* h1D_cemc_clE_cut = new TH1D("cemc_clE_cut",";cemc_clE;",700,0,35);
-  TH1D* h1D_ihcal_clE_cut = new TH1D("ihcal_clE_cut",";ihcal_clE;",700,0,35);
-  TH1D* h1D_ohcal_clE_cut = new TH1D("ohcal_clE_cut",";ohcal_clE;",700,0,35);
-  TH1D* h1D_allThree_clE_cut = new TH1D("allThree_clE_cut",";allThree_clE_cut;",700,0,35);
-  TH1D* h1D_ohcal_incident_clE_cut = new TH1D("ohcal_incident_clE_cut",";Truth E - cemc_E - ihcal_E;",700,0,35);
-  TH1D* h1D_ohcal_frac_clE_cut = new TH1D("ohcal_frac_clE_cut",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",700,0,2.);
-  TH1D* h1D_outerTwo_incident_clE_cut = new TH1D("outerTwo_incident_clE_cut",";Truth E - cemc_E;",700,0,35);
-  TH1D* h1D_outerTwo_frac_clE_cut = new TH1D("outerTwo_frac_clE_cut",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",700,0,2.);
-  TH1D* h1D_allThree_frac_clE_cut = new TH1D("allThree_frac_clE_cut",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",700,0,2.);
+  TH1D* h1D_cemc_clE_cut = new TH1D("cemc_clE_cut",";cemc_clE;",400,0,true_p*1.4);
+  TH1D* h1D_ihcal_clE_cut = new TH1D("ihcal_clE_cut",";ihcal_clE;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_clE_cut = new TH1D("ohcal_clE_cut",";ohcal_clE;",400,0,true_p*1.4);
+  TH1D* h1D_allThree_clE_cut = new TH1D("allThree_clE_cut",";allThree_clE_cut;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_incident_clE_cut = new TH1D("ohcal_incident_clE_cut",";Truth E - cemc_E - ihcal_E;",400,0,true_p*1.4);
+  TH1D* h1D_ohcal_frac_clE_cut = new TH1D("ohcal_frac_clE_cut",";ohcal_E / (Truth E - cemc_E - ihcal_E) ;",400,0,2.);
+  TH1D* h1D_outerTwo_incident_clE_cut = new TH1D("outerTwo_incident_clE_cut",";Truth E - cemc_E;",400,0,true_p*1.4);
+  TH1D* h1D_outerTwo_frac_clE_cut = new TH1D("outerTwo_frac_clE_cut",";(ihcal_E + ohcal_E) / (Truth E - cemc_E);",400,0,2.);
+  TH1D* h1D_allThree_frac_clE_cut = new TH1D("allThree_frac_clE_cut",";(cemc_E + ihcal_E + ohcal_E) / Truth E;",400,0,2.);
 
   ////////////////////////////////////////////////////////
   //////// TH2D
   ////////////////////////////////////////////////////////
 
-  TH2D* h2D_cemc_vs_ihcal_E3x3 = new TH2D("h2D_cemc_vs_ihcal_E3x3",";cemc E3x3;ihcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_ohcal_E3x3 = new TH2D("h2D_cemc_vs_ohcal_E3x3",";cemc E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_ihcal_vs_ohcal_E3x3 = new TH2D("h2D_ihcal_vs_ohcal_E3x3",";ihcal E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_innerTwo_vs_ohcal_E3x3 = new TH2D("h2D_innerTwo_vs_ohcal_E3x3",";cemc E3x3 + ihcal E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_outerTwo_E3x3 = new TH2D("h2D_cemc_vs_outerTwo_E3x3",";cemc E3x3 + ihcal E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E3x3 = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E3x3","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",700,-1.,1.,700,0,2.);
-  TH2D* h2D_allThree_frac_vs_diffHE_frac_E3x3 = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E3x3","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",700,-1.,1.,700,0,2.);
+  TH2D* h2D_cemc_vs_ihcal_E3x3 = new TH2D("h2D_cemc_vs_ihcal_E3x3",";cemc E3x3;ihcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_ohcal_E3x3 = new TH2D("h2D_cemc_vs_ohcal_E3x3",";cemc E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_ihcal_vs_ohcal_E3x3 = new TH2D("h2D_ihcal_vs_ohcal_E3x3",";ihcal E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_innerTwo_vs_ohcal_E3x3 = new TH2D("h2D_innerTwo_vs_ohcal_E3x3",";cemc E3x3 + ihcal E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_outerTwo_E3x3 = new TH2D("h2D_cemc_vs_outerTwo_E3x3",";cemc E3x3 + ihcal E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E3x3 = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E3x3","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E3x3 = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E3x3","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E3x3_nomip = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E3x3_nomip","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E3x3_nomip = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E3x3_nomip","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
   ////
-  TH2D* h2D_cemc_vs_ihcal_E5x5 = new TH2D("h2D_cemc_vs_ihcal_E5x5",";cemc E5x5;ihcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_ohcal_E5x5 = new TH2D("h2D_cemc_vs_ohcal_E5x5",";cemc E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_ihcal_vs_ohcal_E5x5 = new TH2D("h2D_ihcal_vs_ohcal_E5x5",";ihcal E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_innerTwo_vs_ohcal_E5x5 = new TH2D("h2D_innerTwo_vs_ohcal_E5x5",";cemc E5x5 + ihcal E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_outerTwo_E5x5 = new TH2D("h2D_cemc_vs_outerTwo_E5x5",";cemc E5x5 + ihcal E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E5x5 = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E5x5","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",700,-1.,1.,700,0,2.);
-  TH2D* h2D_allThree_frac_vs_diffHE_frac_E5x5 = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E5x5","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",700,-1.,1.,700,0,2.);
+  TH2D* h2D_cemc_vs_ihcal_E5x5 = new TH2D("h2D_cemc_vs_ihcal_E5x5",";cemc E5x5;ihcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_ohcal_E5x5 = new TH2D("h2D_cemc_vs_ohcal_E5x5",";cemc E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_ihcal_vs_ohcal_E5x5 = new TH2D("h2D_ihcal_vs_ohcal_E5x5",";ihcal E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_innerTwo_vs_ohcal_E5x5 = new TH2D("h2D_innerTwo_vs_ohcal_E5x5",";cemc E5x5 + ihcal E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_outerTwo_E5x5 = new TH2D("h2D_cemc_vs_outerTwo_E5x5",";cemc E5x5 + ihcal E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E5x5 = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E5x5","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E5x5 = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E5x5","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E5x5_nomip = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E5x5_nomip","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E5x5_nomip = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E5x5_nomip","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
   ////
-  TH2D* h2D_cemc_vs_ihcal_clE = new TH2D("h2D_cemc_vs_ihcal_clE",";cemc clE;ihcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_ohcal_clE = new TH2D("h2D_cemc_vs_ohcal_clE",";cemc clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_ihcal_vs_ohcal_clE = new TH2D("h2D_ihcal_vs_ohcal_clE",";ihcal clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_innerTwo_vs_ohcal_clE = new TH2D("h2D_innerTwo_vs_ohcal_clE",";cemc clE + ihcal clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_outerTwo_clE = new TH2D("h2D_cemc_vs_outerTwo_clE",";cemc clE + ihcal clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_clE = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_clE","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",700,-1.,1.,700,0,2.);
-  TH2D* h2D_allThree_frac_vs_diffHE_frac_clE = new TH2D("h2D_allThree_frac_vs_diffHE_frac_clE","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",700,-1.,1.,700,0,2.);
+  TH2D* h2D_cemc_vs_ihcal_clE = new TH2D("h2D_cemc_vs_ihcal_clE",";cemc clE;ihcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_ohcal_clE = new TH2D("h2D_cemc_vs_ohcal_clE",";cemc clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_ihcal_vs_ohcal_clE = new TH2D("h2D_ihcal_vs_ohcal_clE",";ihcal clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_innerTwo_vs_ohcal_clE = new TH2D("h2D_innerTwo_vs_ohcal_clE",";cemc clE + ihcal clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_outerTwo_clE = new TH2D("h2D_cemc_vs_outerTwo_clE",";cemc clE + ihcal clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_clE = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_clE","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_clE = new TH2D("h2D_allThree_frac_vs_diffHE_frac_clE","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_clE_nomip = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_clE_nomip","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_clE_nomip = new TH2D("h2D_allThree_frac_vs_diffHE_frac_clE_nomip","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
   ////////
   //// cut
   ////////
-  TH2D* h2D_cemc_vs_ihcal_E3x3_cut = new TH2D("h2D_cemc_vs_ihcal_E3x3_cut",";cemc E3x3;ihcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_ohcal_E3x3_cut = new TH2D("h2D_cemc_vs_ohcal_E3x3_cut",";cemc E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_ihcal_vs_ohcal_E3x3_cut = new TH2D("h2D_ihcal_vs_ohcal_E3x3_cut",";ihcal E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_innerTwo_vs_ohcal_E3x3_cut = new TH2D("h2D_innerTwo_vs_ohcal_E3x3_cut",";cemc E3x3 + ihcal E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_outerTwo_E3x3_cut = new TH2D("h2D_cemc_vs_outerTwo_E3x3_cut",";cemc E3x3 + ihcal E3x3;ohcal E3x3",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",700,-1.,1.,700,0,2.);
-  TH2D* h2D_allThree_frac_vs_diffHE_frac_E3x3_cut = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E3x3_cut","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",700,-1.,1.,700,0,2.);
+  TH2D* h2D_cemc_vs_ihcal_E3x3_cut = new TH2D("h2D_cemc_vs_ihcal_E3x3_cut",";cemc E3x3;ihcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_ohcal_E3x3_cut = new TH2D("h2D_cemc_vs_ohcal_E3x3_cut",";cemc E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_ihcal_vs_ohcal_E3x3_cut = new TH2D("h2D_ihcal_vs_ohcal_E3x3_cut",";ihcal E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_innerTwo_vs_ohcal_E3x3_cut = new TH2D("h2D_innerTwo_vs_ohcal_E3x3_cut",";cemc E3x3 + ihcal E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_outerTwo_E3x3_cut = new TH2D("h2D_cemc_vs_outerTwo_E3x3_cut",";cemc E3x3 + ihcal E3x3;ohcal E3x3",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E3x3_cut = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E3x3_cut","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut_nomip = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut_nomip","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E3x3_cut_nomip = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E3x3_cut_nomip","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
   ////
-  TH2D* h2D_cemc_vs_ihcal_E5x5_cut = new TH2D("h2D_cemc_vs_ihcal_E5x5_cut",";cemc E5x5;ihcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_ohcal_E5x5_cut = new TH2D("h2D_cemc_vs_ohcal_E5x5_cut",";cemc E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_ihcal_vs_ohcal_E5x5_cut = new TH2D("h2D_ihcal_vs_ohcal_E5x5_cut",";ihcal E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_innerTwo_vs_ohcal_E5x5_cut = new TH2D("h2D_innerTwo_vs_ohcal_E5x5_cut",";cemc E5x5 + ihcal E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_outerTwo_E5x5_cut = new TH2D("h2D_cemc_vs_outerTwo_E5x5_cut",";cemc E5x5 + ihcal E5x5;ohcal E5x5",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",700,-1.,1.,700,0,2.);
-  TH2D* h2D_allThree_frac_vs_diffHE_frac_E5x5_cut = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E5x5_cut","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",700,-1.,1.,700,0,2.);
+  TH2D* h2D_cemc_vs_ihcal_E5x5_cut = new TH2D("h2D_cemc_vs_ihcal_E5x5_cut",";cemc E5x5;ihcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_ohcal_E5x5_cut = new TH2D("h2D_cemc_vs_ohcal_E5x5_cut",";cemc E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_ihcal_vs_ohcal_E5x5_cut = new TH2D("h2D_ihcal_vs_ohcal_E5x5_cut",";ihcal E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_innerTwo_vs_ohcal_E5x5_cut = new TH2D("h2D_innerTwo_vs_ohcal_E5x5_cut",";cemc E5x5 + ihcal E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_outerTwo_E5x5_cut = new TH2D("h2D_cemc_vs_outerTwo_E5x5_cut",";cemc E5x5 + ihcal E5x5;ohcal E5x5",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E5x5_cut = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E5x5_cut","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut_nomip = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut_nomip","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_E5x5_cut_nomip = new TH2D("h2D_allThree_frac_vs_diffHE_frac_E5x5_cut_nomip","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
   ////
-  TH2D* h2D_cemc_vs_ihcal_clE_cut = new TH2D("h2D_cemc_vs_ihcal_clE_cut",";cemc clE;ihcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_ohcal_clE_cut = new TH2D("h2D_cemc_vs_ohcal_clE_cut",";cemc clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_ihcal_vs_ohcal_clE_cut = new TH2D("h2D_ihcal_vs_ohcal_clE_cut",";ihcal clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_innerTwo_vs_ohcal_clE_cut = new TH2D("h2D_innerTwo_vs_ohcal_clE_cut",";cemc clE + ihcal clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_cemc_vs_outerTwo_clE_cut = new TH2D("h2D_cemc_vs_outerTwo_clE_cut",";cemc clE + ihcal clE;ohcal clE",700, 0., 35., 700, 0, 35.);
-  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_clE_cut = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_clE_cut","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",700,-1.,1.,700,0,2.);
-  TH2D* h2D_allThree_frac_vs_diffHE_frac_clE_cut = new TH2D("h2D_allThree_frac_vs_diffHE_frac_clE_cut","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",700,-1.,1.,700,0,2.);
+  TH2D* h2D_cemc_vs_ihcal_clE_cut = new TH2D("h2D_cemc_vs_ihcal_clE_cut",";cemc clE;ihcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_ohcal_clE_cut = new TH2D("h2D_cemc_vs_ohcal_clE_cut",";cemc clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_ihcal_vs_ohcal_clE_cut = new TH2D("h2D_ihcal_vs_ohcal_clE_cut",";ihcal clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_innerTwo_vs_ohcal_clE_cut = new TH2D("h2D_innerTwo_vs_ohcal_clE_cut",";cemc clE + ihcal clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_cemc_vs_outerTwo_clE_cut = new TH2D("h2D_cemc_vs_outerTwo_clE_cut",";cemc clE + ihcal clE;ohcal clE",400, 0., true_p*1.4., 400, 0, true_p*1.4.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_clE_cut = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_clE_cut","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_clE_cut = new TH2D("h2D_allThree_frac_vs_diffHE_frac_clE_cut","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_outerTwo_frac_vs_diffIO_frac_clE_cut_nomip = new TH2D("h2D_outerTwo_frac_vs_diffIO_frac_clE_cut_nomip","(ihcal_E + ohcal_E) / (Truth E - cemc_E);(ihcal_E - ohcal_E) / (ihcal_E + ohcal_E)",400,-1.,1.,400,0,2.);
+  TH2D* h2D_allThree_frac_vs_diffHE_frac_clE_cut_nomip = new TH2D("h2D_allThree_frac_vs_diffHE_frac_clE_cut_nomip","(cemc_E + ihcal_E + ohcal_E) / Truth E;((ihcal_E + ohcal_E) - cemc_E) / ((ihcal_E + ohcal_E) + cemc_E)",400,-1.,1.,400,0,2.);
   ////////////////////////////////////////////////////////
   
   int track_n;  
@@ -338,6 +343,11 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
         h2D_cemc_vs_outerTwo_E3x3->Fill(cemc_e, ihcal_e+ohcal_e);
         h2D_outerTwo_frac_vs_diffIO_frac_E3x3->Fill(diffIO_frac,outerTwo_frac);
         h2D_allThree_frac_vs_diffHE_frac_E3x3->Fill(diffHE_frac,allThree_frac);
+        //// skip if cemc && ihcal && ohcal are all mip (black hole)
+        if ( !(cemc_E3x3[itrk] < cemc_mip_cut && ihcal_E3x3[itrk]< ihcal_mip_cut && ohcal_E3x3[itrk] < ohcal_mip_cut) ){
+          h2D_outerTwo_frac_vs_diffIO_frac_E3x3_nomip->Fill(diffIO_frac,outerTwo_frac);
+          h2D_allThree_frac_vs_diffHE_frac_E3x3_nomip->Fill(diffHE_frac,allThree_frac);
+        }
       }
       if (do_E5x5){    
         cemc_e=cemc_E5x5[itrk]*cemc_sf;
@@ -369,6 +379,10 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
         h2D_cemc_vs_outerTwo_E5x5->Fill(cemc_e, ihcal_e+ohcal_e);
         h2D_outerTwo_frac_vs_diffIO_frac_E5x5->Fill(diffIO_frac,outerTwo_frac);
         h2D_allThree_frac_vs_diffHE_frac_E5x5->Fill(diffHE_frac,allThree_frac);
+        if ( !(cemc_E5x5[itrk] < cemc_mip_cut && ihcal_E5x5[itrk]< ihcal_mip_cut && ohcal_E5x5[itrk] < ohcal_mip_cut) ){
+          h2D_outerTwo_frac_vs_diffIO_frac_E5x5_nomip->Fill(diffIO_frac,outerTwo_frac);
+          h2D_allThree_frac_vs_diffHE_frac_E5x5_nomip->Fill(diffHE_frac,allThree_frac);
+        }
       }
       if (do_clE){    
         cemc_e=cemc_clE[itrk]*cemc_sf;
@@ -400,11 +414,15 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
         h2D_cemc_vs_outerTwo_clE->Fill(cemc_e, ihcal_e+ohcal_e);
         h2D_outerTwo_frac_vs_diffIO_frac_clE->Fill(diffIO_frac,outerTwo_frac);
         h2D_allThree_frac_vs_diffHE_frac_clE->Fill(diffHE_frac,allThree_frac);
+        if ( !(cemc_clE[itrk] < cemc_mip_cut && ihcal_clE[itrk]< ihcal_mip_cut && ohcal_clE[itrk] < ohcal_mip_cut) ){
+          h2D_outerTwo_frac_vs_diffIO_frac_clE_nomip->Fill(diffIO_frac,outerTwo_frac);
+          h2D_allThree_frac_vs_diffHE_frac_clE_nomip->Fill(diffHE_frac,allThree_frac);
+        }
       }
       
-      ////////////// cut ///////////////
+      ////////////// cut (energy before scaling) ///////////////
 
-      if (cemc_E3x3[itrk] < cemc_cut && ihcal_E3x3[itrk]< ihcal_cut){
+      if (cemc_E3x3[itrk] < cemc_mip_cut && ihcal_E3x3[itrk]< ihcal_mip_cut){
         if (do_E3x3){    
           cemc_e=cemc_E3x3[itrk]*cemc_sf;
           ihcal_e=ihcal_E3x3[itrk]*ihcal_sf;
@@ -435,6 +453,10 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
           h2D_cemc_vs_outerTwo_E3x3_cut->Fill(cemc_e, ihcal_e+ohcal_e);
           h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut->Fill(diffIO_frac,outerTwo_frac);
           h2D_allThree_frac_vs_diffHE_frac_E3x3_cut->Fill(diffHE_frac,allThree_frac);
+          if ( !(cemc_E3x3[itrk] < cemc_mip_cut && ihcal_E3x3[itrk]< ihcal_mip_cut && ohcal_E3x3[itrk] < ohcal_mip_cut) ){
+            h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut_nomip->Fill(diffIO_frac,outerTwo_frac);
+            h2D_allThree_frac_vs_diffHE_frac_E3x3_cut_nomip->Fill(diffHE_frac,allThree_frac);
+          }
         }
         if (do_E5x5){    
           cemc_e=cemc_E5x5[itrk]*cemc_sf;
@@ -466,6 +488,10 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
           h2D_cemc_vs_outerTwo_E5x5_cut->Fill(cemc_e, ihcal_e+ohcal_e);
           h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut->Fill(diffIO_frac,outerTwo_frac);
           h2D_allThree_frac_vs_diffHE_frac_E5x5_cut->Fill(diffHE_frac,allThree_frac);
+          if ( !(cemc_E5x5[itrk] < cemc_mip_cut && ihcal_E5x5[itrk]< ihcal_mip_cut && ohcal_E5x5[itrk] < ohcal_mip_cut) ){
+            h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut_nomip->Fill(diffIO_frac,outerTwo_frac);
+            h2D_allThree_frac_vs_diffHE_frac_E5x5_cut_nomip->Fill(diffHE_frac,allThree_frac);
+          }
         }
         if (do_clE){    
           cemc_e=cemc_clE[itrk]*cemc_sf;
@@ -497,6 +523,10 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
           h2D_cemc_vs_outerTwo_clE_cut->Fill(cemc_e, ihcal_e+ohcal_e);
           h2D_outerTwo_frac_vs_diffIO_frac_clE_cut->Fill(diffIO_frac,outerTwo_frac);
           h2D_allThree_frac_vs_diffHE_frac_clE_cut->Fill(diffHE_frac,allThree_frac);
+          if ( !(cemc_clE[itrk] < cemc_mip_cut && ihcal_clE[itrk]< ihcal_mip_cut && ohcal_clE[itrk] < ohcal_mip_cut) ){
+            h2D_outerTwo_frac_vs_diffIO_frac_clE_cut_nomip->Fill(diffIO_frac,outerTwo_frac);
+            h2D_allThree_frac_vs_diffHE_frac_clE_cut_nomip->Fill(diffHE_frac,allThree_frac);
+          }
         }
       } //end of cut
     } //end of ntrk loop
@@ -509,6 +539,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   h2D_cemc_vs_outerTwo_E3x3->SetOption("colz");
   h2D_outerTwo_frac_vs_diffIO_frac_E3x3->SetOption("colz");
   h2D_allThree_frac_vs_diffHE_frac_E3x3->SetOption("colz");
+  h2D_outerTwo_frac_vs_diffIO_frac_E3x3_nomip->SetOption("colz");
+  h2D_allThree_frac_vs_diffHE_frac_E3x3_nomip->SetOption("colz");
   //
   h2D_cemc_vs_ihcal_E5x5->SetOption("colz");
   h2D_cemc_vs_ohcal_E5x5->SetOption("colz");
@@ -517,6 +549,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   h2D_cemc_vs_outerTwo_E5x5->SetOption("colz");
   h2D_outerTwo_frac_vs_diffIO_frac_E5x5->SetOption("colz");
   h2D_allThree_frac_vs_diffHE_frac_E5x5->SetOption("colz");
+  h2D_outerTwo_frac_vs_diffIO_frac_E5x5_nomip->SetOption("colz");
+  h2D_allThree_frac_vs_diffHE_frac_E5x5_nomip->SetOption("colz");
   //
   h2D_cemc_vs_ihcal_clE->SetOption("colz");
   h2D_cemc_vs_ohcal_clE->SetOption("colz");
@@ -525,6 +559,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   h2D_cemc_vs_outerTwo_clE->SetOption("colz");
   h2D_outerTwo_frac_vs_diffIO_frac_clE->SetOption("colz");
   h2D_allThree_frac_vs_diffHE_frac_clE->SetOption("colz");
+  h2D_outerTwo_frac_vs_diffIO_frac_clE_nomip->SetOption("colz");
+  h2D_allThree_frac_vs_diffHE_frac_clE_nomip->SetOption("colz");
   ////
   h2D_cemc_vs_ihcal_E3x3_cut->SetOption("colz");
   h2D_cemc_vs_ohcal_E3x3_cut->SetOption("colz");
@@ -533,6 +569,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   h2D_cemc_vs_outerTwo_E3x3_cut->SetOption("colz");
   h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut->SetOption("colz");
   h2D_allThree_frac_vs_diffHE_frac_E3x3_cut->SetOption("colz");
+  h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut_nomip->SetOption("colz");
+  h2D_allThree_frac_vs_diffHE_frac_E3x3_cut_nomip->SetOption("colz");
   //
   h2D_cemc_vs_ihcal_E5x5_cut->SetOption("colz");
   h2D_cemc_vs_ohcal_E5x5_cut->SetOption("colz");
@@ -541,6 +579,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   h2D_cemc_vs_outerTwo_E5x5_cut->SetOption("colz");
   h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut->SetOption("colz");
   h2D_allThree_frac_vs_diffHE_frac_E5x5_cut->SetOption("colz");
+  h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut_nomip->SetOption("colz");
+  h2D_allThree_frac_vs_diffHE_frac_E5x5_cut_nomip->SetOption("colz");
   //
   h2D_cemc_vs_ihcal_clE_cut->SetOption("colz");
   h2D_cemc_vs_ohcal_clE_cut->SetOption("colz");
@@ -549,11 +589,13 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
   h2D_cemc_vs_outerTwo_clE_cut->SetOption("colz");
   h2D_outerTwo_frac_vs_diffIO_frac_clE_cut->SetOption("colz");
   h2D_allThree_frac_vs_diffHE_frac_clE_cut->SetOption("colz");
+  h2D_outerTwo_frac_vs_diffIO_frac_clE_cut_nomip->SetOption("colz");
+  h2D_allThree_frac_vs_diffHE_frac_clE_cut_nomip->SetOption("colz");
   
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_ohcal_scale->Draw();
 
-  TFile* fout = new TFile(Form("out_ohcal_scale/ihcal_scale_%s.root",inType.c_str()),"RECREATE");
+  TFile* fout = new TFile(Form("out_scale/%s_scale_%d_%d_%d.root",inType.c_str(),(int)do_cemc_scale,(int)do_ihcal_scale,(int)do_ohcal_scale),"RECREATE");
   fout->cd();
   
   TDirectory* beforeCut = fout->mkdir("beforeCut");
@@ -576,6 +618,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     h2D_cemc_vs_outerTwo_E3x3->Write();
     h2D_outerTwo_frac_vs_diffIO_frac_E3x3->Write();
     h2D_allThree_frac_vs_diffHE_frac_E3x3->Write();
+    h2D_outerTwo_frac_vs_diffIO_frac_E3x3_nomip->Write();
+    h2D_allThree_frac_vs_diffHE_frac_E3x3_nomip->Write();
   }
   if (do_E5x5){    
     h1D_cemc_E5x5->Write();
@@ -595,6 +639,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     h2D_cemc_vs_outerTwo_E5x5->Write();
     h2D_outerTwo_frac_vs_diffIO_frac_E5x5->Write();
     h2D_allThree_frac_vs_diffHE_frac_E5x5->Write();
+    h2D_outerTwo_frac_vs_diffIO_frac_E5x5_nomip->Write();
+    h2D_allThree_frac_vs_diffHE_frac_E5x5_nomip->Write();
   }
   if (do_clE){    
     h1D_cemc_clE->Write();
@@ -614,6 +660,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     h2D_cemc_vs_outerTwo_clE->Write();
     h2D_outerTwo_frac_vs_diffIO_frac_clE->Write();
     h2D_allThree_frac_vs_diffHE_frac_clE->Write();
+    h2D_outerTwo_frac_vs_diffIO_frac_clE_nomip->Write();
+    h2D_allThree_frac_vs_diffHE_frac_clE_nomip->Write();
   }
   
   TDirectory* afterCut = fout->mkdir("afterCut");
@@ -636,6 +684,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     h2D_cemc_vs_outerTwo_E3x3_cut->Write();
     h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut->Write();
     h2D_allThree_frac_vs_diffHE_frac_E3x3_cut->Write();
+    h2D_outerTwo_frac_vs_diffIO_frac_E3x3_cut_nomip->Write();
+    h2D_allThree_frac_vs_diffHE_frac_E3x3_cut_nomip->Write();
   }
   if (do_E5x5){    
     h1D_cemc_E5x5_cut->Write();
@@ -655,6 +705,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     h2D_cemc_vs_outerTwo_E5x5_cut->Write();
     h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut->Write();
     h2D_allThree_frac_vs_diffHE_frac_E5x5_cut->Write();
+    h2D_outerTwo_frac_vs_diffIO_frac_E5x5_cut_nomip->Write();
+    h2D_allThree_frac_vs_diffHE_frac_E5x5_cut_nomip->Write();
   }
   if (do_clE){    
     h1D_cemc_clE_cut->Write();
@@ -674,6 +726,8 @@ void rootAna_ihcalScale(string inType = "SS310_PiPl_25GeV",int initfile=0,int en
     h2D_cemc_vs_outerTwo_clE_cut->Write();
     h2D_outerTwo_frac_vs_diffIO_frac_clE_cut->Write();
     h2D_allThree_frac_vs_diffHE_frac_clE_cut->Write();
+    h2D_outerTwo_frac_vs_diffIO_frac_clE_cut_nomip->Write();
+    h2D_allThree_frac_vs_diffHE_frac_clE_cut_nomip->Write();
   } 
   
   fout->Close();

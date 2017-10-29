@@ -39,7 +39,7 @@
 
 using namespace RooFit;
  
-void draw_ohcalScale_PlMiCombined(string inType = "SS310_25GeV", bool do_doubleGaus = true)
+void draw_roofit_ohcalScale_PlMiCombined(string inType = "SS310_25GeV", bool do_doubleGaus = true)
 {
   float true_p;
   TString ihcalType;
@@ -54,16 +54,31 @@ void draw_ohcalScale_PlMiCombined(string inType = "SS310_25GeV", bool do_doubleG
     ihcalType = "Al";
     ptlType = "#pi^{#pm}";
   }
+  else if (inType.compare("SS310_10GeV")==0){ 
+    true_p  = 10;
+    ihcalType = "SS310";
+    ptlType = "#pi^{#pm}";
+  }
+  else if (inType.compare("Al_10GeV")==0){ 
+    true_p  = 10;
+    ihcalType = "Al";
+    ptlType = "#pi^{#pm}";
+  }
   else {
     cout<<"WARNING! select correct inType" <<endl; return;
   } 
     
   float fitmin, fitmax;
-  if (do_doubleGaus) { fitmin = 0.35; fitmax = 1.25; }
-  else { fitmin = 0.4; fitmax = 0.9; }
+  if (true_p ==25) {
+    if (do_doubleGaus) { fitmin = 0.35; fitmax = 1.25; }
+    else { fitmin = 0.4; fitmax = 0.95; }
+  } else if (true_p ==10) {
+    if (do_doubleGaus) { fitmin = 0.3; fitmax = 1.2; }
+    else { fitmin = 0.35; fitmax = 0.9; }
+  }
 
-  TFile* fin01 = new TFile(Form("out_ohcal_scale/ohcal_scale_%s_PiPl_%.0fGeV.root",ihcalType.Data(),true_p),"READ");
-  TFile* fin02 = new TFile(Form("out_ohcal_scale/ohcal_scale_%s_PiMi_%.0fGeV.root",ihcalType.Data(),true_p),"READ");
+  TFile* fin01 = new TFile(Form("out_scale/%s_PiPl_%.0fGeV_scale_0_0_0.root",ihcalType.Data(),true_p),"READ");
+  TFile* fin02 = new TFile(Form("out_scale/%s_PiMi_%.0fGeV_scale_0_0_0.root",ihcalType.Data(),true_p),"READ");
   TH1D* h01 = (TH1D*)fin01->Get("afterCut/outerTwo_frac_E3x3_cut");
   TH1D* h02 = (TH1D*)fin02->Get("afterCut/outerTwo_frac_E3x3_cut");
   cout << "h01: " << h01 << endl;
@@ -135,6 +150,6 @@ void draw_ohcalScale_PlMiCombined(string inType = "SS310_25GeV", bool do_doubleG
   }
   latex->Draw();
   
-  c1->SaveAs(Form("out_ohcal_scale/%s_doubleGaus%d.pdf",inType.c_str(),(int)do_doubleGaus));
+  c1->SaveAs(Form("out_scale/%s_doubleGaus%d.pdf",inType.c_str(),(int)do_doubleGaus));
   return; 
 }
