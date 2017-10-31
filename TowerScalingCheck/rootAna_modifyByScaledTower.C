@@ -389,7 +389,7 @@ void rootAna_modifyByScaledTower(TString ihcalType = "MyTree_Al_NotScaled",int i
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_emfrac->Draw();
 
-  TFile* fout = new TFile(Form("out_CEMCscale/CEMCscale_%s_1p00_6p54_1p51.root",ihcalType.Data()),"RECREATE");
+  TFile* fout = new TFile(Form("outModi/CEMCscale_%s_1p00_6p54_1p51.root",ihcalType.Data()),"RECREATE");
   fout->cd();
   h1D_truthjet4_e->Write();
   h1D_truthjet4_p->Write();

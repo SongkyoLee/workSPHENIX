@@ -10,6 +10,7 @@ void comp_JES(double ptmin = 50, double ptmax = 531, double etacut = 0.6, double
   TLegend* leg = new TLegend(0.63, 0.73, 0.93, 0.85);
   
   TFile* f01 = new TFile("./outEMfrac/emfrac_100MeV_Al_NotScaled_v3.root","READ");
+  //TFile* f01 = new TFile("./outEMfrac/emfrac_MyTree_Al_NotScaled.root","READ");
   TH2D* h2D_JES_emfrac = (TH2D*)f01->Get("h2D_JES_emfrac");
   TH1D * proj01 =  h2D_JES_emfrac->ProjectionY();
   proj01->Sumw2();
@@ -17,6 +18,7 @@ void comp_JES(double ptmin = 50, double ptmax = 531, double etacut = 0.6, double
   proj01->Scale(1./proj01->Integral());
 
   TFile* f02 = new TFile("./outEMfrac/emfrac_OnlyHcalScaled.root","READ");
+  //TFile* f02 = new TFile("./outEMfrac/emfrac_100MeV_Al_NotScaled_v3.root","READ");
   TH2D* h2D_JES_emfrac = (TH2D*)f02->Get("h2D_JES_emfrac");
   TH1D * proj02 =  h2D_JES_emfrac->ProjectionY();
   proj02->Sumw2();
@@ -63,6 +65,8 @@ void comp_JES(double ptmin = 50, double ptmax = 531, double etacut = 0.6, double
       
   leg->AddEntry(proj01,"Not Scaled","lp");
   leg->AddEntry(proj02,"Scaled","lp");
+  //leg->AddEntry(proj01,"No cut","lp");
+  //leg->AddEntry(proj02,"100 MeV cut","lp");
   leg->Draw();
 
   cout << "mean01: " << mean01 << endl; 
@@ -72,6 +76,7 @@ void comp_JES(double ptmin = 50, double ptmax = 531, double etacut = 0.6, double
   cout << "sigma02: " << sigma02 << endl; 
   cout << "res02: " << res02 << endl; 
   c1->SaveAs("./outEMfrac/JEScomparsion.pdf"); 
+  //c1->SaveAs("./outEMfrac/JEScomparsion_ecut.pdf"); 
 
   return;
 }

@@ -334,7 +334,7 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_emfrac->Draw();
 
-  TFile* fout = new TFile(Form("out_emfrac/emfrac_%s.root",ihcalType.Data()),"RECREATE");
+  TFile* fout = new TFile(Form("outEMfrac/emfrac_%s.root",ihcalType.Data()),"RECREATE");
   fout->cd();
   h1D_truthjet4_e->Write();
   h1D_truthjet4_p->Write();
