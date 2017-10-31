@@ -56,7 +56,7 @@ void draw_emfrac(TString ihcalType = "100MeV_Al_Scaled")
   float em_min = 0.01;
   float em_max = 0.65;
     
-  TString fname = Form("./out_emfrac/emfrac_%s.root",ihcalType.Data());
+  TString fname = Form("./outEMfrac/emfrac_%s.root",ihcalType.Data());
   TFile* fin = new TFile(fname);
   
   TH2D* h2D_JES_calfrac = (TH2D*)fin->Get("h2D_JES_calfrac");
@@ -132,7 +132,7 @@ void draw_emfrac(TString ihcalType = "100MeV_Al_Scaled")
   latex->DrawLatex(0.65,0.33,Form("p2: %.3f #pm %.3f",f_calfrac->GetParameter(2),f_calfrac->GetParError(2)));
   latex->DrawLatex(0.65,0.27,Form("p3: %.3f #pm %.3f",f_calfrac->GetParameter(3),f_calfrac->GetParError(3)));
   latex->DrawLatex(0.65,0.21,Form("p4: %.3f #pm %.3f",f_calfrac->GetParameter(4),f_calfrac->GetParError(4)));
-  c_calfrac->SaveAs(Form("out_emfrac/%s_JES_calfrac.pdf",ihcalType.Data()));
+  c_calfrac->SaveAs(Form("./outEMfrac/%s_JES_calfrac.pdf",ihcalType.Data()));
   
   ////////////////////////////////////////////////////////
 
@@ -172,7 +172,7 @@ void draw_emfrac(TString ihcalType = "100MeV_Al_Scaled")
   }
   h2D_JES_emfrac->Draw("colz");
   prof_emfrac->Draw("ep same");
-  c_emfrac->SaveAs(Form("out_emfrac/%s_JES_emfrac.pdf",ihcalType.Data()));
+  c_emfrac->SaveAs(Form("./outEMfrac/%s_JES_emfrac.pdf",ihcalType.Data()));
 
  /* 
   ////////////////////////////////////////////////////////
