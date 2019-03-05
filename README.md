@@ -1,10 +1,10 @@
 # sPHENIX working area
 
 ## Table of contents
-* [2017/JESvsR_DVPTrees](##2017/JESvsR_DVPTrees)
-* [2017/LajoieFirstTrees](##2017/LajoieFirstTrees)
-* [2017/GluonQuarkJetsDiscrim](##2017/GluonQuarkJetsDiscrim)
-* [2017/TowerScalePionSample](##2017/TowerScalePionSample)
+* [2017/JESvsR_DVPTrees](#2017/JESvsR_DVPTrees)
+* [2017/LajoieFirstTrees](#2017/LajoieFirstTrees)
+* [2017/GluonQuarkJetsDiscrim](#2017/GluonQuarkJetsDiscrim)
+* [2017/TowerScalePionSample](#2017/TowerScalePionSample)
 
 ## 2017/JESvsR_DVPTrees
 * (201709) JES and JER vs. R from DVP's trees
