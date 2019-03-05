@@ -36,12 +36,18 @@
 #include "TLegend.h"
 #include "TLatex.h"
 
-///////////
-//nosc
-//1p1
-//1p00_1p00_1p66
-//1p00_3p03_1p66
-///////////
+///////// Al //////
+//1p00_6p03_1p38
+//1p38_6p03_1p38
+//1p00_7p75_1p35
+//2p00_7p75_1p35
+///////////////////
+///////// SS //////
+//1p00_2p52_1p39
+//1p39_2p52_1p39
+//1p00_2p57_1p50
+//1p74_2p57_1p50
+///////////////////
 
 //void draw_modi(TString ihcalType = "MyTree_SS310_NotScaled")
 void draw_modi(TString ihcalType = "MyTree_Al_NotScaled")
@@ -61,7 +67,7 @@ void draw_modi(TString ihcalType = "MyTree_Al_NotScaled")
   float em_min = 0.05;
   float em_max = 0.6;
     
-  TString fname = Form("./outModi/CEMCscale_%s_1p00_6p54_1p51.root",ihcalType.Data());
+  TString fname = Form("./outModi/CEMCscale_%s_1p00_7p75_1p35.root",ihcalType.Data());
   TFile* fin = new TFile(fname);
   cout << "fin : " << fin << endl; 
   TH2D* h2D_modi_JES_calfrac = (TH2D*)fin->Get("h2D_modi_JES_calfrac");
@@ -111,7 +117,7 @@ void draw_modi(TString ihcalType = "MyTree_Al_NotScaled")
   latex->DrawLatex(0.65,0.33,Form("p2: %.3f #pm %.3f",f_calfrac->GetParameter(2),f_calfrac->GetParError(2)));
   latex->DrawLatex(0.65,0.27,Form("p3: %.3f #pm %.3f",f_calfrac->GetParameter(3),f_calfrac->GetParError(3)));
   latex->DrawLatex(0.65,0.21,Form("p4: %.3f #pm %.3f",f_calfrac->GetParameter(4),f_calfrac->GetParError(4)));
-  c_calfrac->SaveAs(Form("./outModi/%s_modi_JES_calfrac_1p00_6p54_1p51.pdf",ihcalType.Data()));
+  c_calfrac->SaveAs(Form("./outModi/%s_modi_JES_calfrac_1p00_7p75_1p35.pdf",ihcalType.Data()));
   
   ////////////////////////////////////////////////////////
 
@@ -151,7 +157,7 @@ void draw_modi(TString ihcalType = "MyTree_Al_NotScaled")
   }
   h2D_modi_JES_emfrac->Draw("colz");
   prof_emfrac->Draw("ep same");
-  c_emfrac->SaveAs(Form("./outModi/%s_modi_JES_emfrac_1p00_6p54_1p51.pdf",ihcalType.Data()));
+  c_emfrac->SaveAs(Form("./outModi/%s_modi_JES_emfrac_1p00_7p75_1p35.pdf",ihcalType.Data()));
 
   return; 
 }

@@ -46,7 +46,7 @@
 ////// This code is similar to rootAna_emfrac.C, 
 ////// but scale the towers and modify JES in a fake way
 ////// (RECO jet E = scaled sum of Tower energies)
-void rootAna_modifyByScaledTower(TString ihcalType = "MyTree_SS310_NotScaled",int initfile=0,int endfile =1000)
+void rootAna_modifyByScaledTower_SS25_nocemc(TString ihcalType = "MyTree_SS310_NotScaled",int initfile=0,int endfile =1000)
 {
 
   //// Suppress error messages from bad files

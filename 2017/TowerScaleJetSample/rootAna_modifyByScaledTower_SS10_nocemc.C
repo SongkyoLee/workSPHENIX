@@ -35,8 +35,8 @@
 #include <vector>
   
 #define cemcSF 1.00
-#define ihcalSF 2.52
-#define ohcalSF 1.39
+#define ihcalSF 2.57
+#define ohcalSF 1.50
 
 ///////////
 //MyTree_SS310_NotScaled
@@ -46,7 +46,7 @@
 ////// This code is similar to rootAna_emfrac.C, 
 ////// but scale the towers and modify JES in a fake way
 ////// (RECO jet E = scaled sum of Tower energies)
-void rootAna_modifyByScaledTower(TString ihcalType = "MyTree_SS310_NotScaled",int initfile=0,int endfile =1000)
+void rootAna_modifyByScaledTower_SS10_nocemc(TString ihcalType = "MyTree_SS310_NotScaled",int initfile=0,int endfile =1000)
 {
 
   //// Suppress error messages from bad files
@@ -380,7 +380,7 @@ void rootAna_modifyByScaledTower(TString ihcalType = "MyTree_SS310_NotScaled",in
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_emfrac->Draw();
 
-  TFile* fout = new TFile(Form("outModi/CEMCscale_%s_1p00_2p52_1p39.root",ihcalType.Data()),"RECREATE");
+  TFile* fout = new TFile(Form("outModi/CEMCscale_%s_1p00_2p57_1p50.root",ihcalType.Data()),"RECREATE");
   fout->cd();
   h1D_truthjet4_e->Write();
   h1D_truthjet4_p->Write();

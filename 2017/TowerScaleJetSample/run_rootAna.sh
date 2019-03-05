@@ -10,11 +10,12 @@ set endfile = 1000
 ## OnlyHcalScaled: 583
 
 foreach prefix (MyTree_SS310_NotScaled)
-#foreach prefix (MyTree_Al_NotScaled) # pid is float in this file..
-#foreach prefix (100MeV_Al_NotScaled_v3)
-#foreach prefix (OnlyHcalScaled) #100MeV applied
-#foreach prefix (100MeV_Al_NotScaled_v3 OnlyHcalScaled)
   echo "***** Run" $prefix
   root -l -b -q rootAna_emfrac.C\(\"$prefix\",$initfile,$endfile\)
+end
+  
+foreach prefix (MyTree_Al_NotScaled) # pid is float in this file..
+  echo "***** Run" $prefix
+  root -l -b -q rootAna_emfrac_floatpid.C\(\"$prefix\",$initfile,$endfile\)
 end
 

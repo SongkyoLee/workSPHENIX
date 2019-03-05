@@ -35,8 +35,8 @@
 #include <vector>
   
 #define cemcSF 1.00
-#define ihcalSF 2.52
-#define ohcalSF 1.39
+#define ihcalSF 7.75
+#define ohcalSF 1.35
 
 ///////////
 //MyTree_SS310_NotScaled
@@ -46,7 +46,7 @@
 ////// This code is similar to rootAna_emfrac.C, 
 ////// but scale the towers and modify JES in a fake way
 ////// (RECO jet E = scaled sum of Tower energies)
-void rootAna_modifyByScaledTower(TString ihcalType = "MyTree_SS310_NotScaled",int initfile=0,int endfile =1000)
+void rootAna_modifyByScaledTower_Al10_nocemc(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int endfile =1000)
 {
 
   //// Suppress error messages from bad files
@@ -144,8 +144,8 @@ void rootAna_modifyByScaledTower(TString ihcalType = "MyTree_SS310_NotScaled",in
     float truthjet4_cons_e[999], truthjet4_cons_p[999];
     float truthjet4_cons_pt[999], truthjet4_cons_eta[999], truthjet4_cons_phi[999];
     float truthjet4_cons_dR[999];
-//    float truthjet4_cons_pid[999];  // Al,, KYO: to be modified!!!!!
-    int truthjet4_cons_pid[999]; //SS310
+    float truthjet4_cons_pid[999];  // Al,, KYO: to be modified!!!!!
+//    int truthjet4_cons_pid[999]; //SS310
     maintree->SetBranchAddress("truthjet4_cons_n",&truthjet4_cons_n); 
     maintree->SetBranchAddress("truthjet4_cons_e",&truthjet4_cons_e); 
     maintree->SetBranchAddress("truthjet4_cons_p",&truthjet4_cons_p); 
@@ -380,7 +380,7 @@ void rootAna_modifyByScaledTower(TString ihcalType = "MyTree_SS310_NotScaled",in
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_emfrac->Draw();
 
-  TFile* fout = new TFile(Form("outModi/CEMCscale_%s_1p00_2p52_1p39.root",ihcalType.Data()),"RECREATE");
+  TFile* fout = new TFile(Form("outModi/CEMCscale_%s_1p00_7p75_1p35.root",ihcalType.Data()),"RECREATE");
   fout->cd();
   h1D_truthjet4_e->Write();
   h1D_truthjet4_p->Write();

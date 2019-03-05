@@ -92,8 +92,10 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
   TH1D* h1D_towerjet4_ohcal_phi = new TH1D("towerjet4_ohcal_phi",";Tower Jet ohcal #phi;",100,-3.5,3.5);
   TH1D* h1D_towerjet4_ohcal_dR = new TH1D("towerjet4_ohcal_dR",";Tower Jet ohcal dR;",100,0.,1.0);
   ////////////////////////////////////////////////////////
-  TH2D* h2D_JES_emfrac = new TH2D("h2D_JES_emfrac",";Truth Jet EM fraction;JES (=E_{Tower Jet}/E_{Truth Jet})",100, 0., 1., 100, 0, 1.5);
-  TH2D* h2D_JES_calfrac = new TH2D("h2D_JES_calfrac",";(E_{HCAL}-E_{EMCAL})/(E_{HCAL}+E_{EMCAL});JES (=E_{Tower Jet}/E_{Truth Jet})",100, -1., 1., 100, 0, 1.5);
+  //TH2D* h2D_JES_emfrac = new TH2D("h2D_JES_emfrac",";Truth Jet EM fraction;JES (=E_{Tower Jet}/E_{Truth Jet})",100, 0., 1., 100, 0, 1.5);
+  //TH2D* h2D_JES_calfrac = new TH2D("h2D_JES_calfrac",";(E_{HCAL}-E_{EMCAL})/(E_{HCAL}+E_{EMCAL});JES (=E_{Tower Jet}/E_{Truth Jet})",100, -1., 1., 100, 0, 1.5);
+  TH2D* h2D_JES_emfrac = new TH2D("h2D_JES_emfrac",";Truth Jet EM fraction;JES (=E_{Tower Jet}/E_{Truth Jet})",100, 0., 1., 100, 0, 2.0);
+  TH2D* h2D_JES_calfrac = new TH2D("h2D_JES_calfrac",";(E_{HCAL}-E_{EMCAL})/(E_{HCAL}+E_{EMCAL});JES (=E_{Tower Jet}/E_{Truth Jet})",100, -1., 1., 100, 0, 2.0);
   ////////////////////////////////////////////////////////
 
   //// loop over files 
@@ -258,8 +260,8 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
     //// 3) Fill need-more-calculation info 
     
     //// loop over truth jet entries
-    //for (int itrue=0; itrue<maintree->GetEntries(); itrue++){
-    for (int itrue=0; itrue<6; itrue++){
+    for (int itrue=0; itrue<maintree->GetEntries(); itrue++){
+    //for (int itrue=0; itrue<6; itrue++){
 
       maintree->GetEntry(itrue);
       
@@ -333,6 +335,9 @@ void rootAna_emfrac(TString ihcalType = "MyTree_Al_NotScaled",int initfile=0,int
 
   //TCanvas* c1 = new TCanvas("c1","",600,600);
   //h2D_JES_emfrac->Draw();
+
+  h2D_JES_calfrac->SetOption("colz");
+  h2D_JES_emfrac->SetOption("colz");
 
   TFile* fout = new TFile(Form("outEMfrac/emfrac_%s.root",ihcalType.Data()),"RECREATE");
   fout->cd();
