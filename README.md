@@ -5,6 +5,8 @@
 * [2017/LajoieFirstTrees](#LajoieFirstTrees)
 * [2017/GluonQuarkJetsDiscrim](#GluonQuarkJetsDiscrim)
 * [2017/TowerScalePionSample](#TowerScalePionSample)
+* [2017/JetScaleGammaJetSample_171215collaboMeeting](#JetScaleGammaJetSample_171215collaboMeeting)
+* [2017/JetScaleJetSample_171215collaboMeeting](#JetScaleJetSample_171215collaboMeeting)
 
 <a name="JESvsR_DVPTrees"/></a>
 ## 2017/JESvsR_DVPTrees
@@ -22,4 +24,17 @@
 ## 2017/TowerScalePionSample
 * (201710-11) extract the calorimeter scaling constants using single pion simulation
 * not used: later decided to use jet itself instead of pion sample
+
+<a name="TowerScaleJetSample"/></a>
+## 2017/TowerScaleJetSample
+* (201710-11) extract the calorimeter scaling constants using dijet simulation
+* not used: later decided to scale "Jet E in each Cal Layer" instead of tower by tower (dir name: TowerScale vs. JetScale)
+
+<a name="JetScaleGammaJetSample_171215collaboMeeting"/></a>
+## 2017/JetScaleGammaJetSample_171215collaboMeeting
+* (201712) extract the calorimeter scaling constants using gamma-jet simulation
+
+<a name="JetScaleJetSample_171215collaboMeeting"/></a>
+## 2017/JetScaleJetSample_171215collaboMeeting
+* (201712) Apply the scaling constants obtained from Gamma-jet samples to Di-jet samples
 
