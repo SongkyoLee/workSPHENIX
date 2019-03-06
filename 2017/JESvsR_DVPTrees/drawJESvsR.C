@@ -253,7 +253,7 @@ void drawJESvsR(double ptmin = 50, double ptmax = 531, double etacut = 0.6, doub
   gJESRatio03->Draw("P");
   dashedLine(0.1,1.,0.6,1.,1,1);
   
-  c_JES->SaveAs(Form("outJESvsR/JES_cone%d_%s_etacut%.1f_dRcut%.1f.pdf",jetCone,varType.c_str(),etacut,dRcut));
+  c_JES->SaveAs(Form("outJESvsR/JES_%s_etacut%.1f_dRcut%.1f.pdf",varType.c_str(),etacut,dRcut));
 
   ///////////////////////////////////////
   //// Draw JER
@@ -327,7 +327,7 @@ void drawJESvsR(double ptmin = 50, double ptmax = 531, double etacut = 0.6, doub
   gJERRatio03->Draw("P");
   dashedLine(0.1,1.,0.6,1.,1,1);
   
-  c_JER->SaveAs(Form("outJESvsR/JER_cone%d_%s_etacut%.1f_dRcut%.1f.pdf",jetCone,varType.c_str(),etacut,dRcut));
+  c_JER->SaveAs(Form("outJESvsR/JER_%s_etacut%.1f_dRcut%.1f.pdf",varType.c_str(),etacut,dRcut));
 
   return;
 }
