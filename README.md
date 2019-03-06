@@ -10,6 +10,7 @@
 * [2018/forCDR_Jan](#forCDR_Jan)
 * [2018/EoverPcut](#EoverPcut)
 * [2018/variousMethodsForScales](#variousMethodsForScales)
+* [2018/gammaCrossSection](#gammaCrossSection)
 
 <a name="JESvsR_DVPTrees"/></a>
 ## 2017/JESvsR_DVPTrees
@@ -52,4 +53,8 @@
 <a name="variousMethodsForScales"/></a>
 ## 2018/variousMethodsForScales
 * (201804) various methods are tested to determine scaling factors (e.g., asymmetry method, Minuit, hybrid, etc)
+
+<a name="gammaCrossSection"/></a>
+## 2018/variousMethodsForScales
+* (201804) calculate gamma cross-section for realisitc pp data taking
 
