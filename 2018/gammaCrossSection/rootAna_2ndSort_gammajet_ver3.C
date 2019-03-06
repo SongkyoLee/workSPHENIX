@@ -38,30 +38,21 @@ using namespace std;
 double DeltaPhi(double phi1, double phi2);
 
 void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
-                              string ihcalType = "SS310",
-                              string jetE = "allGeV",
+                              string ihcalType = "Alframe",
+                              string jetInE = "20GeV",
+                              string jetOutE = "20GeV",
                               string vtxType = "vtx10gaus",
                               int initfile=0,
-                              int endfile =310,
-                              bool doetopcut=true,
-                              bool dodphicut=true)
+                              int endfile =1000,
+                              bool doetopcut=false,
+                              bool dodphicut=false)
 {
-  //// N.B.: DO NOT SCALE in this code!!! (scaling in method01_asymm_gammajet.C and method01_asymm_qcdjet.C )
-  //// E = c_tot ( c_em * E_cemc + c_h ( c_ih * C_ihcal + C_ohcal) )
-  float cemc_sf =1;
-  float ihcal_sf =1;
-  float ohcal_sf =1;
-    
-  gStyle->SetPalette(1);
-  //gStyle->SetPalette(51);
-  //gStyle->SetPalette(55);
-  
+  //// N.B.: DO NOT SCALE in this code!!!
+
   //////////////////////////////////////////////////////////////////////////// 
-  //////////////////////////////////////////////////////////////////////////// 
-  
   //// write new tree
-  string foutname = Form("./2ndSortedRootFiles/2ndSorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_doetopcut%d_dodphicut%d_ver3.root",initfile,endfile,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),(int)doetopcut,(int)dodphicut);
-  //string foutname = Form("./2ndSortedRootFiles/2ndSorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_%s_doetopcut%d_dodphicut%d.root",initfile,endfile,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),vtxType.c_str(),(int)doetopcut,(int)dodphicut);
+  string foutname = Form("./2ndSortedRootFiles/2ndSorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_doetopcut%d_dodphicut%d_ver3.root",initfile,endfile,sampleType.c_str(),jetOutE.c_str(),ihcalType.c_str(),(int)doetopcut,(int)dodphicut);
+  //string foutname = Form("./2ndSortedRootFiles/2ndSorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_%s_doetopcut%d_dodphicut%d.root",initfile,endfile,sampleType.c_str(),jetOutE.c_str(),ihcalType.c_str(),vtxType.c_str(),(int)doetopcut,(int)dodphicut);
   TFile* fout = new TFile( foutname.c_str(), "RECREATE");
   TTree* outTree = new TTree("out_tree","out_tree");
   
@@ -84,12 +75,13 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
   float reco_jet_clcemc_hadEsum, reco_jet_clcemc_emEsum, reco_jet_clcemc_totEsum;
   float reco_jet_clihcal_totEsum, reco_jet_clohcal_totEsum;
   float reco_jet_cemcEsum, reco_jet_ihcalEsum, reco_jet_ohcalEsum;
- 
-  float true_dPhi;
-  float reco_dPhi;
-   
-  outTree->Branch("evt",&evt,"evt/I");
+  
+	float true_dPhi;
+	float reco_dPhi;
+
+	outTree->Branch("evt",&evt,"evt/I");
   outTree->Branch("true_gamma_e",&true_gamma_e,"true_gamma_e/F");
+  outTree->Branch("true_gamma_p",&true_gamma_p,"true_gamma_p/F");
   outTree->Branch("true_gamma_pt",&true_gamma_pt,"true_gamma_pt/F");
   outTree->Branch("true_gamma_eta",&true_gamma_eta,"true_gamma_eta/F");
   outTree->Branch("true_gamma_phi",&true_gamma_phi,"true_gamma_phi/F");
@@ -97,35 +89,55 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
   outTree->Branch("true_gamma_emfrac",&true_gamma_emfrac,"true_gamma_emfrac/F");
   outTree->Branch("true_gamma_cons_n",&true_gamma_cons_n,"true_gamma_cons_n/I");
   outTree->Branch("true_gamma_lcons_pid",&true_gamma_lcons_pid,"true_gamma_lcons_pid/I");
-  
+ 
   outTree->Branch("true_jet_e",&true_jet_e,"true_jet_e/F");
+  outTree->Branch("true_jet_p",&true_jet_p,"true_jet_p/F");
   outTree->Branch("true_jet_pt",&true_jet_pt,"true_jet_pt/F");
   outTree->Branch("true_jet_eta",&true_jet_eta,"true_jet_eta/F");
   outTree->Branch("true_jet_phi",&true_jet_phi,"true_jet_phi/F");
   outTree->Branch("true_jet_lcons_z",&true_jet_lcons_z,"true_jet_lcons_z/F");
   outTree->Branch("true_jet_emfrac",&true_jet_emfrac,"true_jet_emfrac/F");
   outTree->Branch("true_jet_cons_n",&true_jet_cons_n,"true_jet_cons_n/I");
-  outTree->Branch("true_jet_lcons_pid",&true_jet_lcons_pid,"true_jet_lcons_pid/I");
+  outTree->Branch("true_jet_lcons_pid",&true_jet_lcons_pid,"true_jet_lcons_pid/I"); 
   
   outTree->Branch("reco_gamma_e",&reco_gamma_e,"reco_gamma_e/F");
-  outTree->Branch("reco_gamma_pt",&reco_gamma_pt,"reco_gamma_pt/F");
-  
-  outTree->Branch("reco_jet_e",&reco_jet_e,"reco_jet_e/F");
+  outTree->Branch("reco_gamma_p",&reco_gamma_p,"reco_gamma_p/F");  
+  outTree->Branch("reco_gamma_pt",&reco_gamma_pt,"reco_gamma_pt/F");  
+  outTree->Branch("reco_gamma_eta",&reco_gamma_eta,"reco_gamma_eta/F");  
+  outTree->Branch("reco_gamma_phi",&reco_gamma_phi,"reco_gamma_phi/F");  
+  outTree->Branch("reco_gamma_clcemc_hadEsum",&reco_gamma_clcemc_hadEsum,"reco_gamma_clcemc_hadEsum/F"); //cluster 
+  outTree->Branch("reco_gamma_clcemc_emEsum",&reco_gamma_clcemc_emEsum,"reco_gamma_clcemc_emEsum/F");  
+  outTree->Branch("reco_gamma_clcemc_totEsum",&reco_gamma_clcemc_totEsum,"reco_gamma_clcemc_totEsum/F");  
+  outTree->Branch("reco_gamma_clihcal_totEsum",&reco_gamma_clihcal_totEsum,"reco_gamma_clihcal_totEsum/F");  
+  outTree->Branch("reco_gamma_clohcal_totEsum",&reco_gamma_clohcal_totEsum,"reco_gamma_clohcal_totEsum/F");  
+  outTree->Branch("reco_gamma_cemcEsum",&reco_gamma_cemcEsum,"reco_gamma_cemcEsum/F");  //tower
+  outTree->Branch("reco_gamma_ihcalEsum",&reco_gamma_ihcalEsum,"reco_gamma_ihcalEsum/F");  
+  outTree->Branch("reco_gamma_ohcalEsum",&reco_gamma_ohcalEsum,"reco_gamma_ohcalEsum/F");  
+
+	outTree->Branch("reco_jet_e",&reco_jet_e,"reco_jet_e/F");
+  outTree->Branch("reco_jet_p",&reco_jet_p,"reco_jet_p/F");
   outTree->Branch("reco_jet_pt",&reco_jet_pt,"reco_jet_pt/F");
-  outTree->Branch("reco_jet_clcemc_hadEsum",&reco_jet_clcemc_hadEsum,"reco_jet_clcemc_hadEsum/F"); //cluster-scaled
-  outTree->Branch("reco_jet_clcemc_emEsum",&reco_jet_clcemc_emEsum,"reco_jet_clcemc_emEsum/F"); //cluster-NOTSCALED
+  outTree->Branch("reco_jet_eta",&reco_jet_eta,"reco_jet_eta/F");
+  outTree->Branch("reco_jet_phi",&reco_jet_phi,"reco_jet_phi/F");
+  outTree->Branch("reco_jet_clcemc_hadEsum",&reco_jet_clcemc_hadEsum,"reco_jet_clcemc_hadEsum/F"); //cluster
+  outTree->Branch("reco_jet_clcemc_emEsum",&reco_jet_clcemc_emEsum,"reco_jet_clcemc_emEsum/F"); 
+  outTree->Branch("reco_jet_clcemc_totEsum",&reco_jet_clcemc_totEsum,"reco_jet_clcemc_totEsum/F");
+  outTree->Branch("reco_jet_clihcal_totEsum",&reco_jet_clihcal_totEsum,"reco_jet_clihcal_totEsum/F");  
+  outTree->Branch("reco_jet_clohcal_totEsum",&reco_jet_clohcal_totEsum,"reco_jet_clohcal_totEsum/F");  
   outTree->Branch("reco_jet_cemcEsum",&reco_jet_cemcEsum,"reco_jet_cemcEsum/F"); //tower-NOTSCALED
   outTree->Branch("reco_jet_ihcalEsum",&reco_jet_ihcalEsum,"reco_jet_ihcalEsum/F");//tower-scaled
   outTree->Branch("reco_jet_ohcalEsum",&reco_jet_ohcalEsum,"reco_jet_ohcalEsum/F");//tower-scaled
-  
-  outTree->Branch("true_dPhi",&true_dPhi,"true_dPhi/F");
+
+	outTree->Branch("true_dPhi",&true_dPhi,"true_dPhi/F");
   outTree->Branch("reco_dPhi",&reco_dPhi,"reco_dPhi/F");
-  
+
   ////////////////////////////////////// 
   //// read-in files
   ////////////////////////////////////// 
-  //string fname = Form("./sortedRootFiles/sorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_doetopcut%d_dodphicut%d.root",initfile,endfile,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),(int)doetopcut,(int)dodphicut);
-  string fname = Form("./sortedRootFiles/sorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_%s_doetopcut%d_dodphicut%d.root",initfile,endfile,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),vtxType.c_str(),(int)doetopcut,(int)dodphicut);
+  string fname;
+  if (vtxType.compare("nover")==0) { fname = Form("./sortedRootFiles/sorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_doetopcut%d_dodphicut%d.root",initfile,endfile,sampleType.c_str(),jetInE.c_str(),ihcalType.c_str(),(int)doetopcut,(int)dodphicut); }
+  else { fname = Form("./sortedRootFiles/sorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_%s_doetopcut%d_dodphicut%d.root",initfile,endfile,sampleType.c_str(),jetInE.c_str(),ihcalType.c_str(),vtxType.c_str(),(int)doetopcut,(int)dodphicut); }
+
   TFile* fin = new TFile( fname.c_str(), "READ");
   TTree* true_tree = (TTree*)fin->Get("true_tree");
   TTree* reco_tree = (TTree*)fin->Get("reco_tree");
@@ -190,7 +202,6 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
   
   ////////////////////////////////////// 
   for (int ievt=0; ievt<true_tree->GetEntries(); ievt++){ 
-  //for (int ievt=0; ievt<10; ievt++){ 
     if (ievt%1000==0) cout << "Processing Event :" <<ievt << endl; 
     true_tree->GetEvent(ievt); 
     
@@ -218,7 +229,7 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
     }
 
     //if ((true_emfrac[idx_1] > true_emfrac[idx_2]) && true_lcons_pid[idx_1] ==22 && true_cons_n[idx_1]==1 ){
-    if ((true_emfrac[idx_1] >= true_emfrac[idx_2]) && true_lcons_pid[idx_1] ==22){
+		if ((true_emfrac[idx_1] >= true_emfrac[idx_2]) && true_lcons_pid[idx_1] ==22){
       true_gamma_e=true_e[idx_1];
       true_gamma_p=true_p[idx_1];
       true_gamma_pt=true_pt[idx_1];
@@ -228,7 +239,7 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
       true_gamma_emfrac=true_emfrac[idx_1];
       true_gamma_cons_n=true_cons_n[idx_1];
       true_gamma_lcons_pid=true_lcons_pid[idx_1];
-      true_jet_e=true_e[idx_2];
+			true_jet_e=true_e[idx_2];
       true_jet_p=true_p[idx_2];
       true_jet_pt=true_pt[idx_2];
       true_jet_eta=true_eta[idx_2];
@@ -238,7 +249,7 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
       true_jet_cons_n=true_cons_n[idx_2];
       true_jet_lcons_pid=true_lcons_pid[idx_2];
     //} else if ((true_emfrac[idx_1] < true_emfrac[idx_2]) && true_lcons_pid[idx_2] ==22 && true_cons_n[idx_2]==1 ){
-    } else if ((true_emfrac[idx_1] <= true_emfrac[idx_2]) && true_lcons_pid[idx_2] ==22 ){
+		} else if ((true_emfrac[idx_1] <= true_emfrac[idx_2]) && true_lcons_pid[idx_2] ==22 ){
       true_gamma_e=true_e[idx_2];
       true_gamma_p=true_p[idx_2];
       true_gamma_pt=true_pt[idx_2];
@@ -265,7 +276,7 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
     ////////// cut on truth //////////
     //if (true_gamma_e < 50 || true_jet_e < 50) continue;
     //if (true_gamma_e < 50) continue; //only to gamma
-    //if (fabs(true_gamma_eta) > 0.6 || fabs(true_jet_eta) > 0.6) continue;
+    //if (fabs(true_gamma_eta) > 0.45 || fabs(true_jet_eta) > 0.45) continue;
     
     ///////////////////////// 
     //// reco matching
@@ -319,7 +330,7 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
         reco_jet_eta = reco_eta[ireco];
         reco_jet_phi = reco_phi[ireco];
         //// cluster
-        reco_jet_clcemc_hadEsum = reco_clcemc_hadEsum[ireco]*cemc_sf; //scale 
+        reco_jet_clcemc_hadEsum = reco_clcemc_hadEsum[ireco];
         reco_jet_clcemc_emEsum = reco_clcemc_emEsum[ireco]; 
         reco_jet_clcemc_totEsum = reco_clcemc_totEsum[ireco]; 
         reco_jet_clihcal_totEsum = reco_clihcal_totEsum[ireco]; 
@@ -327,43 +338,44 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
         //// tower (cemcEsum remained the same!!)
         //reco_jet_cemcEsum = reco_jet_clcemc_hadEsum+reco_jet_clcemc_emEsum; //scaled sum
         reco_jet_cemcEsum = reco_cemcEsum[ireco];
-        reco_jet_ihcalEsum = reco_ihcalEsum[ireco]*ihcal_sf; //scale
-        reco_jet_ohcalEsum = reco_ohcalEsum[ireco]*ohcal_sf; //scale
+        reco_jet_ihcalEsum = reco_ihcalEsum[ireco];
+        reco_jet_ohcalEsum = reco_ohcalEsum[ireco];
       }
     } //EOL over reco_n 
    
     /// double-check dPhi
     true_dPhi = fabs( DeltaPhi(true_gamma_phi, true_jet_phi) );
-    reco_dPhi = fabs( DeltaPhi(reco_gamma_phi, reco_jet_phi) );
+		reco_dPhi = fabs( DeltaPhi(reco_gamma_phi, reco_jet_phi) );
     
     ////////// cut on reco //////////
-    if (fabs(reco_gamma_eta) > 0.6) continue;
-    if (fabs(reco_jet_eta) > 0.6) continue;
-    
+    if (fabs(reco_gamma_eta) > 0.45) continue;
+    if (fabs(reco_jet_eta) > 0.45) continue;
+    /*
     //// *** dR(reco-true) matching  
     //if (match_gamma_dR > 0.4 || match_jet_dR > 0.4) continue; 
     //// *** dR(gamma-jet) in different hemisphere
-    //if (reco_dPhi < TMath::Pi()*(7/8.)) continue;
+    if (reco_dPhi < TMath::Pi()*(1/2.)) continue;
+		//if (reco_dPhi < TMath::Pi()*(7/8.)) continue;
+    */
     //// HCAL/CEMC cut for highly efficient photon
     if ((reco_gamma_ihcalEsum+reco_gamma_ohcalEsum)/reco_gamma_cemcEsum  >0.1) continue;
-
     //// *** reco jet e range (cut on reco)
-    if (jetE.compare("allGeV")==0){
-      if (!(reco_gamma_e > 20)) continue; //only to reco gamma
-    }
-    if (jetE.compare("20GeV")==0){
+		if (jetOutE.compare("allGeV")==0){
+			if (!(reco_gamma_e > 20)) continue; //only to reco gamma
+		}
+    else if (jetOutE.compare("20GeV")==0){
       if (!(reco_gamma_e > 20 && reco_gamma_e <30)) continue; //only to reco gamma
     }
-    else if (jetE.compare("30GeV")==0){
+    else if (jetOutE.compare("30GeV")==0){
       if (!(reco_gamma_e > 30 && reco_gamma_e <40)) continue; //only to reco gamma
     }
-    else if (jetE.compare("40GeV")==0){
+    else if (jetOutE.compare("40GeV")==0){
       if (!(reco_gamma_e > 40 && reco_gamma_e <50)) continue; //only to reco gamma
     }
-    else if (jetE.compare("50GeV")==0){
+    else if (jetOutE.compare("50GeV")==0){
       if (!(reco_gamma_e > 50 && reco_gamma_e <60)) continue; //only to reco gamma
     }
-    
+
     outTree->Fill();
     evt++;
   
@@ -374,6 +386,7 @@ void rootAna_2ndSort_gammajet_ver3(string sampleType = "GammaJet",
   outTree->Write();
   fout->Close(); 
 
+  
   return; 
  
 }

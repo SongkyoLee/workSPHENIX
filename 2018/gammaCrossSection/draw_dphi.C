@@ -1,7 +1,7 @@
 void draw_dphi(){
 
-  TFile* f1 = new TFile("./2ndSortedRootFiles/2ndSorted_0to310_GammaJet_G4sPHENIX_jet4_allGeV_SS310_doetopcut1_dodphicut1_ver2.root","READ");
-  TFile* f2 = new TFile("./2ndSortedRootFiles/2ndSorted_0to310_GammaJet_G4sPHENIX_jet4_allGeV_SS310_doetopcut1_dodphicut1_ver3.root","READ");
+  TFile* f1 = new TFile("./2ndSortedRootFiles/2ndSorted_0to300_GammaJet_G4sPHENIX_jet4_allGeV_SS310_doetopcut1_dodphicut1_ver2.root","READ");
+  TFile* f2 = new TFile("./2ndSortedRootFiles/2ndSorted_0to300_GammaJet_G4sPHENIX_jet4_allGeV_SS310_doetopcut1_dodphicut1_ver3.root","READ");
 
   TTree* t1 = (TTree*)f1->Get("out_tree");
   TTree* t2 = (TTree*)f2->Get("out_tree");

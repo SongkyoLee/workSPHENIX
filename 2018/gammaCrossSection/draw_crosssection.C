@@ -4,31 +4,34 @@ void recursiveFit(TH1D* t_h1, TF1* t_tf1, float t_fitmin, float t_fitmax, float*
 
 void draw_crosssection(string sampleType = "GammaJet",
                               string ihcalType = "SS310",
-                              string jetE = "allGeV",
-                              string version = "ver7",
+                              string jetE = "20GeV",
+                              string version = "nover",
                               int initfile=0,
-                              int endfile =310,
+                              int endfile =1000,
                               bool doetopcut=true,
                               bool dodphicut=true)
 {
-  //cemc_sf = cemc_sf*total_sf;
-  //if (ihcalType.compare("SS310") == 0) { ihcal_sf = ihcal_sf*total_sf; }
-  //ohcal_sf = ohcal_sf*total_sf;
- 
   //// https://root.cern.ch/doc/master/classTColor.html 
   gStyle->SetPalette(52); //black
  
-  string fname = Form("./2ndSortedRootFiles/2ndSorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_doetopcut%d_dodphicut%d_%s.root",initfile,endfile,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),(int)doetopcut,(int)dodphicut,version.c_str());
+  string fname;
+  if (version.compare("nover")==0) fname = Form("./2ndSortedRootFiles/2ndSorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_doetopcut%d_dodphicut%d.root",initfile,endfile,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),(int)doetopcut,(int)dodphicut);
+  else fname = Form("./2ndSortedRootFiles/2ndSorted_%dto%d_%s_G4sPHENIX_jet4_%s_%s_doetopcut%d_dodphicut%d_%s.root",initfile,endfile,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),(int)doetopcut,(int)dodphicut,version.c_str());
   TFile* fin = new TFile( fname.c_str(), "READ");
   TTree* out_tree = (TTree*)fin->Get("out_tree");
   
-  TH1D* h_trueg_yield = new TH1D("h_trueg_yield",";E_{True}^{#gamma} [GeV];Counts",50,0,50);
-  TH1D* h_trueg_cross = new TH1D("h_trueg_cross",";p_{T}^{Truth #gamma} [GeV];#frac{1}{2#pi p_{T}} #frac{d^{2}#sigma}{dp_{T}dy} [pb GeV^{-2}]",50,0,50);
-  TH1D* h_gamma_yield = new TH1D("h_gamma_yield",";E_{Reco}^{#gamma} [GeV];Counts",50,0,50);
-  TH1D* h_gamma_cross = new TH1D("h_gamma_cross",";p_{T}^{Reco #gamma} [GeV];#frac{1}{2#pi p_{T}} #frac{d^{2}#sigma}{dp_{T}dy} [pb GeV^{-2}]",50,0,50);
+  int nbin, binmin, binmax;
+  if (jetE.compare("allGeV")==0) { nbin=50; binmin=0; binmax = 50;}
+  else {nbin=60; binmin=10; binmax=70;}
+  
+  TH1D* h_trueg_yield = new TH1D("h_trueg_yield",";E_{True}^{#gamma} [GeV];Counts",nbin,binmin,binmax);
+  TH1D* h_trueg_cross = new TH1D("h_trueg_cross",";p_{T}^{Truth #gamma} [GeV];#frac{1}{2#pi p_{T}} #frac{d^{2}#sigma}{dp_{T}dy} [pb GeV^{-2}]",nbin,binmin,binmax);
+  TH1D* h_gamma_yield = new TH1D("h_gamma_yield",";E_{Reco}^{#gamma} [GeV];Counts",nbin,binmin,binmax);
+  TH1D* h_gamma_cross = new TH1D("h_gamma_cross",";p_{T}^{Reco #gamma} [GeV];#frac{1}{2#pi p_{T}} #frac{d^{2}#sigma}{dp_{T}dy} [pb GeV^{-2}]",nbin,binmin,binmax);
   TH1D* h_gamma_RtoT = new TH1D("h_gamma_RtoT",";E_{Reco}^{#gamma}/E_{Truth}^{#gamma};Counts",50,0.0,2.0);
   TH1D* h_jet_RtoT = new TH1D("h_jet_RtoT",";E_{Reco}^{Jet}/E_{Truth}^{Jet};Counts",50,0.0,2.0);
   TH1D* h_jet_JtoG = new TH1D("h_jet_JtoG",";E_{Reco}^{Jet}/E_{Reco}^{#gamma};Counts",50,0.0,2.0);
+  TH1D* h_trueE_JtoG = new TH1D("h_trueE_JtoG",";E_{Truth}^{Jet}/E_{Truth}^{#gamma};Counts",50,0.0,2.0);
   h_trueg_yield->Sumw2();
   h_trueg_cross->Sumw2();
   h_gamma_yield->Sumw2();
@@ -36,6 +39,7 @@ void draw_crosssection(string sampleType = "GammaJet",
   h_gamma_RtoT->Sumw2();
   h_jet_RtoT->Sumw2();
   h_jet_JtoG->Sumw2();
+  h_trueE_JtoG->Sumw2();
   
   int evt;
   float true_gamma_e;
@@ -46,6 +50,7 @@ void draw_crosssection(string sampleType = "GammaJet",
 
   float reco_gamma_e;
   float reco_gamma_pt;
+  float reco_gamma_cemcEsum;
   float reco_jet_e;
   float reco_jet_pt;
   float reco_jet_clcemc_hadEsum;
@@ -62,6 +67,7 @@ void draw_crosssection(string sampleType = "GammaJet",
   
   out_tree->SetBranchAddress("reco_gamma_e",&reco_gamma_e);
   out_tree->SetBranchAddress("reco_gamma_pt",&reco_gamma_pt);
+  out_tree->SetBranchAddress("reco_gamma_cemcEsum",&reco_gamma_cemcEsum);
   out_tree->SetBranchAddress("reco_jet_e",&reco_jet_e);
   out_tree->SetBranchAddress("reco_jet_pt",&reco_jet_pt);
   out_tree->SetBranchAddress("reco_jet_clcemc_hadEsum",&reco_jet_clcemc_hadEsum);
@@ -70,64 +76,31 @@ void draw_crosssection(string sampleType = "GammaJet",
   out_tree->SetBranchAddress("reco_jet_ohcalEsum",&reco_jet_ohcalEsum);
   
   int nevt = out_tree->GetEntries();
-  //int nevt = 500;
   cout << "nevt = " << nevt << endl;
 
   for (int ievt=0; ievt <nevt; ievt++){
     out_tree->GetEvent(ievt);
     
-    //// scaling
-    //reco_jet_clcemc_hadEsum = reco_jet_clcemc_hadEsum*cemc_sf;
-    //reco_jet_ihcalEsum = reco_jet_ihcalEsum*ihcal_sf;
-    //reco_jet_ohcalEsum = reco_jet_ohcalEsum*ohcal_sf;
-    
     h_trueg_yield->Fill(true_gamma_e);
     //h_trueg_cross->Fill(true_gamma_e,1./true_gamma_pt);
     h_trueg_cross->Fill(true_gamma_pt,1./true_gamma_pt);
-    h_gamma_yield->Fill(reco_gamma_e);
-    //h_gamma_cross->Fill(reco_gamma_e,1./reco_gamma_pt);
-    h_gamma_cross->Fill(reco_gamma_pt,1./reco_gamma_pt);
-    h_gamma_RtoT->Fill(reco_gamma_e/true_gamma_e);
+    h_gamma_yield->Fill(reco_gamma_cemcEsum);
+    //h_gamma_cross->Fill(reco_gamma_cemcEsum,1./reco_gamma_pt);
+    h_gamma_cross->Fill(reco_gamma_pt,1./reco_gamma_pt); //N.B. pT <- CEMC+IHCAL+OHCAL
+    h_gamma_RtoT->Fill(reco_gamma_cemcEsum/true_gamma_e);
     h_jet_RtoT->Fill(reco_jet_e/true_jet_e);
-    h_jet_JtoG->Fill(reco_jet_e/reco_gamma_e);
+    h_jet_JtoG->Fill(reco_jet_e/reco_gamma_cemcEsum);
+    h_trueE_JtoG->Fill(true_jet_e/true_gamma_e);
   }
 
   //cross-section calculation 
-  double drap = 1.2; // ||y|<0.6
-  double lumi = 48.0519; //pb^-1
-  double dpt = 1; //pT binwitdh
-/*  
-  double tmpval = -999;
-  double tmpcontent = -999;
-  double tmpcenter = -999;
-  double tmpwidth = -999;
-  for (Int_t ib=0;ib<h_trueg_yield->GetSize()-2; ib++){
-    tmpcontent = h_trueg_yield->GetBinContent(ib+1);
-    tmpcenter = h_trueg_yield->GetBinCenter(ib+1);
-    tmpwidth = h_trueg_yield->GetBinWidth(ib+1);
-    cout << "tmpcontent = " << tmpcontent << endl;
-    cout << "tmpcenter = " << tmpcenter << endl;
-    cout << "tmpwidth = " << tmpwidth << endl;
-    tmpval = tmpcontent/(2*TMath::Pi()*tmpcenter*tmpwidth*drap*lumi);
-    h_trueg_cross->SetBinContent(ib+1,tmpval);
-    if (tmpcenter<20) h_trueg_cross->SetBinContent(ib+1,0);
-  }  
+  //double drap = 2*0.6; // ||y|<0.6
+  double drap = 2*0.45; // ||y|<0.45
+  //double lumi = 48.0519; //pb^-1 (file 0--310)
+  double lumi = 46.5135; //pb^-1 (file 0--300)
+  //double dpt = 1; //pT binwitdh
+  double dpt = (binmax-binmin)/nbin; //pT binwitdh
   
-  tmpval = -999;
-  tmpcontent = -999;
-  tmpcenter = -999;
-  tmpwidth = -999;
-  for (Int_t ib=0;ib<h_gamma_yield->GetSize()-2; ib++){
-    tmpcontent = h_gamma_yield->GetBinContent(ib+1);
-    tmpcenter = h_gamma_yield->GetBinCenter(ib+1);
-    tmpwidth = h_gamma_yield->GetBinWidth(ib+1);
-    cout << "tmpcontent = " << tmpcontent << endl;
-    cout << "tmpcenter = " << tmpcenter << endl;
-    cout << "tmpwidth = " << tmpwidth << endl;
-    tmpval = tmpcontent/(2*TMath::Pi()*tmpcenter*tmpwidth*drap*lumi);
-    h_gamma_cross->SetBinContent(ib+1,tmpval);
-  }  
-  */
   //h_gamma_cross=(TH1D*)h_gamma_yield->Clone("h_gamma_cross");
   h_trueg_cross->Scale(1./(2*TMath::Pi()*dpt*drap*lumi));
   h_gamma_cross->Scale(1./(2*TMath::Pi()*dpt*drap*lumi));
@@ -142,13 +115,12 @@ void draw_crosssection(string sampleType = "GammaJet",
     if (tmpcenter<20) h_gamma_cross->SetBinContent(ib+1,0);
   }  
 
-  //h_IHAsymm->SetOption("colz");
-
   SetLineHistStyle(h_gamma_RtoT,1);
   SetLineHistStyle(h_jet_RtoT,2);
   SetLineHistStyle(h_jet_JtoG,3);
-  SetHistStyle(h_trueg_cross,5,0);
-  SetHistStyle(h_gamma_cross,3,0);
+  SetHistStyle(h_trueg_cross,3,0);
+  SetHistStyle(h_gamma_cross,4,0);
+  SetLineHistStyle(h_trueE_JtoG,4);
   h_trueg_cross->SetMarkerSize(1);
   h_gamma_cross->SetMarkerSize(1);
   
@@ -166,7 +138,6 @@ void draw_crosssection(string sampleType = "GammaJet",
   latex->SetNDC();
   latex->SetTextAlign(32);
 
-  //TCanvas* c1 = new TCanvas("c1","",1600,1200);
   TCanvas* c1 = new TCanvas("c1","",1000,500);
   c1->Divide(2,1);
   
@@ -243,7 +214,7 @@ void draw_crosssection(string sampleType = "GammaJet",
   cout  << "E_{Reco}^{Jet} / E_{Reco}^{#gamma} = " << muJtoG << endl;
   cout  << "Ratio of mean = " << muRtoT/muJtoG << endl;
  
-  c1->SaveAs(Form("out_cross/JES_%s.pdf",version.c_str())); 
+  c1->SaveAs(Form("out_cross/JES_%s_%s.pdf",jetE.c_str(),version.c_str())); 
   
 
   //////////////////////////////////////////////////////
@@ -267,7 +238,7 @@ void draw_crosssection(string sampleType = "GammaJet",
   gPad->SetLogy(1);
   cout << gPad->GetLeftMargin() << endl;
   gPad->SetLeftMargin(0.2);
-  h_trueg_cross->GetXaxis()->SetRangeUser(10,40);
+  if (jetE.compare("allGeV")==0) h_trueg_cross->GetXaxis()->SetRangeUser(10,40);
   //h_trueg_cross->SetMinimum(10e-5);
   //h_trueg_cross->SetMaximum(10e1);
   h_trueg_cross->GetYaxis()->SetRangeUser(10e-5,10e1);
@@ -288,34 +259,40 @@ void draw_crosssection(string sampleType = "GammaJet",
   //gPad->SetLogy(0);
   gPad->SetLogy(1);
   gPad->SetLeftMargin(0.2);
-  h_gamma_cross->GetXaxis()->SetRangeUser(10,40);
+  if (jetE.compare("allGeV")==0) h_gamma_cross->GetXaxis()->SetRangeUser(10,40);
   h_gamma_cross->SetMinimum(10e-5);
   h_gamma_cross->SetMaximum(10e1);
   //h_gamma_cross->GetYaxis()->SetRangeUser(10e-4,10e2);
   h_gamma_cross->GetYaxis()->SetTitleOffset(1.8); 
   h_gamma_cross->Draw("pe");
 
-  c2->SaveAs(Form("out_cross/cross_%s.pdf",version.c_str())); 
+  c2->SaveAs(Form("out_cross/cross_%s_%s.pdf",jetE.c_str(),version.c_str())); 
 
-/*
-  if (total_sf !=1) {
-    c2->SaveAs(Form("outFinal%s/final1D_wTot%.0f_%s_%s_%s_%.0f_%.0f_%.0f.pdf",ihcalType.c_str(),100*total_sf,sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),100*cemc_sf,100*ihcal_sf,100*ohcal_sf));
-  } else {
-    c2->SaveAs(Form("outFinal%s/final1D_%s_%s_%s_%.0f_%.0f_%.0f.pdf",ihcalType.c_str(),sampleType.c_str(),jetE.c_str(),ihcalType.c_str(),100*cemc_sf,100*ihcal_sf,100*ohcal_sf));
+  TCanvas* c3 = new TCanvas("c3","",500,500);
+  h_trueE_JtoG->GetXaxis()->SetTitle("E_{Truth}^{Jet}/E_{Truth}^{#gamma}");
+  h_trueE_JtoG->Draw("hist e");
+  
+  fitmin = 0.0;
+  fitmax = 2.0;
+  TF1* tf_trueE_JtoG= new TF1("TF_gamma_RtoT","gaus",fitmin,fitmax);
+  //col = h_trueE_JtoG->GetMarkerColor();
+  //tf_trueE_JtoG->SetLineColor(col);
+  tf_trueE_JtoG->SetLineColor(kOrange+2);
+  recursiveFit(h_trueE_JtoG, tf_trueE_JtoG,fitmin, fitmax, &mean, &sig, &sigErr);
+  for (int ir=0; ir<repeat; ir++){
+    fitmin = mean-2*sig;
+    fitmax = mean+2*sig;
+    recursiveFit(h_trueE_JtoG, tf_trueE_JtoG,fitmin, fitmax, &mean, &sig, &sigErr);
   }
-
-  cout  << "" << endl;
-  cout  << ihcalType.c_str() << " "<< jetE.c_str() << endl;
-  cout << "cemcScale = " << cemc_sf << endl;
-  cout << "ihcalScale = " << ihcal_sf << endl;
-  cout << "ohcalScale = " << ohcal_sf << endl;
-  cout << "*total_sf = " << total_sf << endl;
-  cout << "*jes_mean = " << mean_jes << endl;
-  cout << "*jes_sig = " << sig_jes << endl;
-  cout << "*jes_sig/mean = " << sig_jes/mean_jes << endl;
-  cout << "*jer_mean = " << mean_jer << endl;
-  cout << "*jer_sig = " << sig_jer << endl;
-*/
+  tf_trueE_JtoG->Draw("same");
+  sz_mean = Form ("#mu = %.2f", mean);
+  myLatex(0.65,0.88,"E_{Truth}^{Jet} / E_{Truth}^{#gamma}",12,0.045,kOrange+2);
+  myLatex(0.65,0.82,sz_mean.c_str(),12,0.045,kOrange+2);
+  double muTrueE = mean;
+  
+  c3->SaveAs(Form("out_cross/truth_%s_%s.pdf",jetE.c_str(),version.c_str())); 
+  cout  << "E_{Truth}^{Jet} / E_{Truth}^{Jet} ratio_of_truth = " << muTrueE << endl;
+  
   return;
 }
 ////////////////////////////////////////
