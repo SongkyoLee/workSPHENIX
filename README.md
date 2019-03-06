@@ -11,6 +11,7 @@
 * [2018/EoverPcut](#EoverPcut)
 * [2018/variousMethodsForScales](#variousMethodsForScales)
 * [2018/gammaCrossSection](#gammaCrossSection)
+* [2018/forCDR_May](#forCDR_May)
 
 <a name="JESvsR_DVPTrees"/></a>
 ## 2017/JESvsR_DVPTrees
@@ -52,9 +53,19 @@
 
 <a name="variousMethodsForScales"/></a>
 ## 2018/variousMethodsForScales
-* (201804) various methods are tested to determine scaling factors (e.g., asymmetry method, Minuit, hybrid, etc)
+* Until 201803, jet |eta|<0.6 with larger EMCal acceptanc<0.6 with larger EMCal acceptance
+* (201803) various methods are tested to determine scaling factors (e.g., asymmetry method, Minuit, hybrid, etc)
 
 <a name="gammaCrossSection"/></a>
 ## 2018/variousMethodsForScales
-* (201804) calculate gamma cross-section for realisitc pp data taking (20180410 new |eta| < 0.45)
+* From 201804: new |eta| < 0.45 with reduced EMCal acceptance
+* (201804) calculate gamma cross-section for realisitc pp data taking 
 
+<a name="punchThroughStudy_May"/></a>
+## 2018/punchThroughStudy_May
+* (201805) not finalized.. punch through study by Gaussian tail
+
+<a name="forCDR_May"/></a>
+## 2018/forCDR_May
+* (201805) Actual and final plots for CDR 2018 May. input txt_jes and txt_scale are from XXX
+ 
