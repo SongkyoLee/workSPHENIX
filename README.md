@@ -56,5 +56,5 @@
 
 <a name="gammaCrossSection"/></a>
 ## 2018/variousMethodsForScales
-* (201804) calculate gamma cross-section for realisitc pp data taking
+* (201804) calculate gamma cross-section for realisitc pp data taking (20180410 new |eta| < 0.45)
 
