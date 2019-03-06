@@ -7,6 +7,9 @@
 * [2017/TowerScalePionSample](#TowerScalePionSample)
 * [2017/JetScaleGammaJetSample_171215collaboMeeting](#JetScaleGammaJetSample_171215collaboMeeting)
 * [2017/JetScaleJetSample_171215collaboMeeting](#JetScaleJetSample_171215collaboMeeting)
+* [2018/forCDR_Jan](#forCDR_Jan)
+* [2018/EoverPcut](#EoverPcut)
+* [2018/variousMethodsForScales](#variousMethodsForScales)
 
 <a name="JESvsR_DVPTrees"/></a>
 ## 2017/JESvsR_DVPTrees
@@ -37,4 +40,16 @@
 <a name="JetScaleJetSample_171215collaboMeeting"/></a>
 ## 2017/JetScaleJetSample_171215collaboMeeting
 * (201712) Apply the scaling constants obtained from Gamma-jet samples to Di-jet samples
+
+<a name="forCDR_Jan"/></a>
+## 2018/forCDR_Jan
+* (201801) plotting for CDR (not actually used)
+
+<a name="EoverPcut"/></a>
+## 2018/EoverPcut
+* (201802) some macros to check EoverP cuts and constituents in a jet (input files are wrong?)
+
+<a name="variousMethodsForScales"/></a>
+## 2018/variousMethodsForScales
+* (201804) various methods are tested to determine scaling factors (e.g., asymmetry method, Minuit, hybrid, etc)
 
