@@ -57,7 +57,7 @@
 * (201803) various methods are tested to determine scaling factors (e.g., asymmetry method, Minuit, hybrid, etc)
 
 <a name="gammaCrossSection"/></a>
-## 2018/variousMethodsForScales
+## 2018/gammaCrossSection
 * From 201804: new |eta| < 0.45 with reduced EMCal acceptance
 * (201804) calculate gamma cross-section for realisitc pp data taking 
 
