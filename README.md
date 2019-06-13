@@ -12,9 +12,16 @@
 * [2018/variousMethodsForScales](#variousMethodsForScales)
 * [2018/gammaCrossSection](#gammaCrossSection)
 * [2018/forCDR_May](#forCDR_May)
-* [2018/CalcScale_diffE_vtx0] (#CalcScale_diffE_vtx0)
-* [2018/CalcScale_py8jet_vtx10gaus] (#CalcScale_py8jet_vtx10gaus)
-* [2018/CalcScale_diffE_ETvsPT_fitting] (#CalcScale_diffE_ETvsPT_fitting)
+* [2018/CalcScale_diffE_vtx0](#CalcScale_diffE_vtx0)
+* [2018/CalcScale_py8jet_vtx10gaus](#CalcScale_py8jet_vtx10gaus)
+* [2018/CalcScale_diffE_ETvsPT_fitting](#CalcScale_diffE_ETvsPT_fitting)
+* [2018/KPPcheck](#KPPcheck)
+* [2018/CalcScale_truthinfor_pp](#CalcScale_truthinfor_pp)
+* [2018/CalcScale_truthinfor_HIJet](#CalcScale_truthinfor_HIJet)
+* [2018/forHallman](#forHallman)
+* [2018/CalcScale_wTot_Lorentz_pp](#CalcScale_wTot_Lorentz_pp)
+* [2018/CalcScale_wTot_Lorentz_HIJet](#CalcScale_wTot_Lorentz_HIJet)
+* [2018/CalcScale_wTot_Lorentz_HIJet_frompp](#CalcScale_wTot_Lorentz_HIJet_frompp)
 
 <a name="JESvsR_DVPTrees"/></a>
 ## 2017/JESvsR_DVPTrees
@@ -26,7 +33,7 @@
 
 <a name="GluonQuarkJetsDiscrim"/></a>
 ## 2017/GluonQuarkJetsDiscrim
-* (201710)  heck the discrimination of gluon jet vs. quark jet using Lajoie'sTree
+* (201710) check the discrimination of gluon jet vs. quark jet using Lajoie'sTree
 
 <a name="TowerScalePionSample"/></a>
 ## 2017/TowerScalePionSample
@@ -83,7 +90,34 @@
 <a name="CalcScale_diffE_ETvsPT_fitting"/></a>
 ## 2018/CalcScale_diffE_ETvsPT_fitting
 * (20180410) |eta| < 0.45, 4 samples with differenc E slice [20, 30, 40, 50, 60] GeV
-* ET vs PT instead of E, and fit the resolution
+* ET vs PT instead of E, and fit the resolution (for comparison with Dennis results)
 
+<a name="KPPcheck"/></a>
+## 2018/KPPcheck
+* (201805) for KPP study (to Jin Huang)
 
+<a name="CalcScale_truthinfor_pp"/></a>
+## 2018/CalcScale_truthinfor_pp
+* (20180705) use truth jet energy for calibration instead of gamma energy
+
+<a name="CalcScale_truthinfor_HIJet"/></a>
+## 2018/CalcScale_truthinfor_HIJet
+* (20180705) use truth jet energy for calibration instead of gamma energy
+
+<a name="forHallman"/></a>
+## 2018/forHallman
+* (201807) supplementary plot to Hallman
+
+<a name="CalcScale_wTot_Lorentz_pp"/></a>
+## 2018/CalcScale_wTot_Lorentz_pp
+* (201809) Introduce Scaling Constant for total Energy, use Lorentz vector to add pT info into tree
+
+<a name="CalcScale_wTot_Lorentz_HIJet"/></a>
+## 2018/CalcScale_wTot_Lorentz_HIJet
+* (201809) Introduce Scaling Constant for total Energy, use Lorentz vector to add pT info into tree
+
+<a name="CalcScale_wTot_Lorentz_HIJet"/></a>
+## 2018/CalcScale_wTot_Lorentz_HIJet
+* (201809) use pp scaling constants to HI
+* not used
 
