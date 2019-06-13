@@ -23,8 +23,9 @@
 * [2018/CalcScale_wTot_Lorentz_pp](#CalcScale_wTot_Lorentz_pp)
 * [2018/CalcScale_wTot_Lorentz_HIJet](#CalcScale_wTot_Lorentz_HIJet)
 * [2018/CalcScale_wTot_Lorentz_HIJet_frompp](#CalcScale_wTot_Lorentz_HIJet_frompp)
-* [2018/CalcScale_wTot_Lorentz_HIJet_frompp](#CalcScale_wTot_Lorentz_HIJet_frompp)
 * [2018/TreeProduction](#TreeProduction)
+* [2018/CalcScale_reco_py8jet_6set_pp](#CalcScale_reco_py8jet_6set_pp)
+* [2018/CalcScale_reco_diffE_pp_nu](#CalcScale_reco_diffE_pp_nu)
 
 <a name="JESvsR_DVPTrees"/></a>
 ## 2017/JESvsR_DVPTrees
@@ -123,12 +124,21 @@
 ## 2018/CalcScale_wTot_Lorentz_HIJet
 * (201809) Introduce Scaling Constant for total Energy, use Lorentz vector to add pT info into tree
 
-<a name="CalcScale_wTot_Lorentz_HIJet"/></a>
-## 2018/CalcScale_wTot_Lorentz_HIJet
+<a name="CalcScale_wTot_Lorentz_HIJet_frompp"/></a>
+## 2018/CalcScale_wTot_Lorentz_HIJet_frompp
 * (201809) use pp scaling constants to HI
 * not used
 
 <a name="TreeProduction"/></a>
 ## 2018/TreeProduction
 * (201807) Tree production (sortedRootFiles, 2ndSortedRootFiles)
+
+<a name="CalcScale_reco_py8jet_6set_pp"/></a>
+## 2018/CalcScale_reco_py8jet_6set_pp
+* (201810) try to use reco jet Pt binning instead of truth jet Pt as real data to apply scaling constant.
+
+<a name="CalcScale_reco_diffE_pp_nu"/></a>
+## 2018/CalcScale_reco_diffE_pp_nu
+* (201810) try to use reco jet Pt binning instead of truth jet Pt as real data to apply scaling constant.
+* Not working yet
 
