@@ -12,6 +12,9 @@
 * [2018/variousMethodsForScales](#variousMethodsForScales)
 * [2018/gammaCrossSection](#gammaCrossSection)
 * [2018/forCDR_May](#forCDR_May)
+* [2018/CalcScale_diffE_vtx0] (#CalcScale_diffE_vtx0)
+* [2018/CalcScale_py8jet_vtx10gaus] (#CalcScale_py8jet_vtx10gaus)
+* [2018/CalcScale_diffE_ETvsPT_fitting] (#CalcScale_diffE_ETvsPT_fitting)
 
 <a name="JESvsR_DVPTrees"/></a>
 ## 2017/JESvsR_DVPTrees
@@ -69,3 +72,18 @@
 ## 2018/forCDR_May
 * (201805) Actual and final plots for CDR 2018 May. input txt_jes and txt_scale are from XXX
  
+<a name="CalcScale_diffE_vtx0"/></a>
+## 2018/CalcScale_diffE_vtx0
+* (20180410) |eta| < 0.45, vtx = 0 cm, 4 samples with differenc E slice [20, 30, 40, 50, 60] GeV
+
+<a name="CalcScale_py8jet_vtx10gaus"/></a>
+## 2018/CalcScale_py8jet_vtx10gaus
+* (20180410) |eta| < 0.45, vtx = Gaussian with sigma = 10 cm, one samples from pythia8
+
+<a name="CalcScale_diffE_ETvsPT_fitting"/></a>
+## 2018/CalcScale_diffE_ETvsPT_fitting
+* (20180410) |eta| < 0.45, 4 samples with differenc E slice [20, 30, 40, 50, 60] GeV
+* ET vs PT instead of E, and fit the resolution
+
+
+
