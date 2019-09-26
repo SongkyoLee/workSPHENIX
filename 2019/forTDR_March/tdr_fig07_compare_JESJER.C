@@ -18,9 +18,12 @@ void tdr_fig07_compare_JESJER(){
   //jerymin =0.0; jerymax = 0.38;
   jerymin =0.0; jerymax = 0.35;
 
-  TFile* inFile01 = new TFile("../z_20180410_diffE_vtx0_gammaEMCALonly_eta045/outvsE/JESvsE_final_qcd_sigmean.root","READ"); 
-  TFile* inFile02 = new TFile("../z_20180410_py_vtx10gaus_gammaEMCALonly_eta045/out_stat/JESJERvsE_final_SS310_sigmean.root","READ"); 
-  TFile* inFile03 = new TFile("../z_20180410_py_vtx10gaus_gammaEMCALonly_eta045/out_stat/JESJERvsE_final_Alframe_sigmean.root","READ"); 
+  //TFile* inFile01 = new TFile("../z_20180410_diffE_vtx0_gammaEMCALonly_eta045/outvsE/JESvsE_final_qcd_sigmean.root","READ"); 
+  //TFile* inFile02 = new TFile("../z_20180410_py_vtx10gaus_gammaEMCALonly_eta045/out_stat/JESJERvsE_final_SS310_sigmean.root","READ"); 
+  //TFile* inFile03 = new TFile("../z_20180410_py_vtx10gaus_gammaEMCALonly_eta045/out_stat/JESJERvsE_final_Alframe_sigmean.root","READ"); 
+  TFile* inFile01 = new TFile("../../2018/CalcScale_diffE_vtx0/outvsE/JESvsE_final_qcd_sigmean.root","READ"); 
+  TFile* inFile02 = new TFile("../../2018/CalcScale_py8jet_vtx10gaus/out_stat/JESJERvsE_final_SS310_sigmean.root","READ"); 
+  TFile* inFile03 = new TFile("../../2018/CalcScale_py8jet_vtx10gaus/out_stat/JESJERvsE_final_Alframe_sigmean.root","READ"); 
  
   ///////////////////////////////////////
   //// Draw JES

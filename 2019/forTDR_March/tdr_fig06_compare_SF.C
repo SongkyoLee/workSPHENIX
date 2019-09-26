@@ -22,8 +22,10 @@ void tdr_fig06_compare_SF(string ihcalType="Alframe"){
   //ymin =0.9; ymax = 3.5;
   ymin =0.5; ymax = 3.5;
 
-  TFile* inFile01 = new TFile(Form("../z_20180410_diffE_vtx0_gammaEMCALonly_eta045/outvsE/SFvsE_%s.root",ihcalType.c_str()),"READ"); 
-  TFile* inFile02 = new TFile(Form("../z_20180410_py_vtx10gaus_gammaEMCALonly_eta045/out_stat/SFvsE_final_%s.root",ihcalType.c_str()),"READ"); 
+  //TFile* inFile01 = new TFile(Form("../z_20180410_diffE_vtx0_gammaEMCALonly_eta045/outvsE/SFvsE_%s.root",ihcalType.c_str()),"READ"); 
+  //TFile* inFile02 = new TFile(Form("../z_20180410_py_vtx10gaus_gammaEMCALonly_eta045/out_stat/SFvsE_final_%s.root",ihcalType.c_str()),"READ"); 
+  TFile* inFile01 = new TFile(Form("../../2018/CalcScale_diffE_vtx0/outvsE/SFvsE_%s.root",ihcalType.c_str()),"READ"); 
+  TFile* inFile02 = new TFile(Form("../../2018/CalcScale_py8jet_vtx10gaus/out_stat/SFvsE_final_%s.root",ihcalType.c_str()),"READ"); 
   
   TGraphAsymmErrors* gcemc_2 = (TGraphAsymmErrors*)inFile01->Get("gcemc_2");
   TGraphAsymmErrors* gihcal_2 = (TGraphAsymmErrors*)inFile01->Get("gihcal_2");
